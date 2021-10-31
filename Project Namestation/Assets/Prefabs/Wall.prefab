@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4270895829921875584}
   - component: {fileID: 4270895829921875586}
-  - component: {fileID: 4577412752375074160}
   - component: {fileID: 9065099986314657861}
   - component: {fileID: 4268903164798134638}
   m_Layer: 8
@@ -86,22 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4577412752375074160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4270895829921875585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3864c55a002da2243a1a8a0f23b22a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  structureName: Metal Floor
-  sprite: {fileID: 0}
-  width: 1
-  height: 1
 --- !u!61 &9065099986314657861
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -153,4 +136,4 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: -66386
+  m_InstanceId: 27628
