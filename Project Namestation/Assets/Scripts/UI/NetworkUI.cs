@@ -21,6 +21,7 @@ public class NetworkUI : MonoBehaviour
     public void Host()
     {
         networkManager.StartHost();
+        Debug.Log("Yay, I be alib");
     }
 
     public void Connect()
