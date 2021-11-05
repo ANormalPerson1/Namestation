@@ -17,18 +17,11 @@ public class NetworkUI : MonoBehaviour
     private void Start()
     {
         networkManager = GetComponent<NetworkManager>();
-        Debug.Log("1");
-        Console.WriteLine("wat");
-        if (SystemInfo.graphicsDeviceName == null)
-        {
-            Host();
-        }
     }
 
     public void Host()
     {
         networkManager.StartHost();
-        Debug.Log("Yay, I be alib");
     }
 
     public void Connect()
