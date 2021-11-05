@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Mirror;
 using TMPro;
@@ -13,9 +14,15 @@ public class NetworkUI : MonoBehaviour
 
     NetworkManager networkManager;
 
-    private void Awake()
+    private void Start()
     {
         networkManager = GetComponent<NetworkManager>();
+        Debug.Log("1");
+        Console.WriteLine("wat");
+        if (SystemInfo.graphicsDeviceName == null)
+        {
+            Host();
+        }
     }
 
     public void Host()
