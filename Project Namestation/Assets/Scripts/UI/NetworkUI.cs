@@ -13,6 +13,11 @@ public class NetworkUI : MonoBehaviour
 
     NetworkManager networkManager;
 
+    private void Awake()
+    {
+        networkManager = GetComponent<NetworkManager>();
+    }
+
     public void Host()
     {
         networkManager.StartHost();
