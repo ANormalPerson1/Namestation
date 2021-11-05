@@ -4,10 +4,12 @@ namespace Namestation.Player
 {
     public class InputManager : MonoBehaviour
     {
+        #region Variables
         [HideInInspector] public bool movementInputEnabled = true;
         [HideInInspector] public bool interactionInputEnabled = true;
         [HideInInspector] public bool interactionButtonPressed = false;
         [HideInInspector] public Vector2 mousePosition;
+        #endregion
 
         #region References
         CameraManager cameraManager;
