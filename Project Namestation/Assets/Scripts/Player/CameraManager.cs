@@ -12,6 +12,7 @@ namespace Namestation.Player
         protected override void InitializeNotLocalPlayer()
         {
             base.InitializeNotLocalPlayer();
+            Debug.Log("Wryyy");
             Destroy(playerCamera.gameObject);
         }
     }

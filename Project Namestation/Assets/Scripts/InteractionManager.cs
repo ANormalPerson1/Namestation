@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Namestation.Interactables;
 using UnityEngine;
 using System.Linq;
 using Mirror;
@@ -9,8 +10,6 @@ namespace Namestation.Player
     public class InteractionManager : PlayerComponent
     {
         [SerializeField] float collisionDetectionRadius;
-        [SerializeField] GameObject emptyGameObject;
-        [SerializeField] GameObject floorPrefab;
         [SerializeField] LayerMask floorLayerMask;
         [SerializeField] LayerMask wallLayerMask;
         [SerializeField] LayerMask entityLayerMask;
@@ -25,9 +24,9 @@ namespace Namestation.Player
             inputManager = playerComponents.inputManager;
         }
 
-        protected override void Update()
+        private void Update()
         {
-            base.Update();
+            if (!initialized || !isLocalPlayer) return;
             CheckPlaceObject();
         }
 
@@ -66,7 +65,7 @@ namespace Namestation.Player
 
         private void PlaceObjectAsNewStructure(Vector2 mousePosition)
         {
-            PlaceObjectServer(floorPrefab, mousePosition, Quaternion.identity, null);
+            PlaceObjectServer(0, mousePosition, Quaternion.identity, null);
         }
 
         private void PlaceObjectAddToExistingStructure(Vector2 mousePosition, Collider2D existingStructure)
@@ -77,26 +76,26 @@ namespace Namestation.Player
 
             if(GridClear(placementPosition.Value, structureTransform.rotation))
             {
-                PlaceObjectServer(floorPrefab, placementPosition.Value, structureTransform.rotation, structureTransform.parent);
+                PlaceObjectServer(0, placementPosition.Value, structureTransform.rotation, structureTransform.parent);
             }
         }
 
         [Command]
-        private void PlaceObjectServer(GameObject newObject, Vector2 position, Quaternion rotation, Transform parent)
+        private void PlaceObjectServer(int objectIndex, Vector2 position, Quaternion rotation, Transform parent)
         {
-            PlaceObjectClient(newObject, position, rotation, parent);
+            PlaceObjectClient(objectIndex, position, rotation, parent);
         }
 
         [ClientRpc]
-        private void PlaceObjectClient(GameObject newObject, Vector2 position, Quaternion rotation, Transform parent)
+        private void PlaceObjectClient(int objectIndex, Vector2 position, Quaternion rotation, Transform parent)
         {
             if(parent == null)
             {
-                parent = Instantiate(emptyGameObject, position, rotation).transform;
+                parent = Instantiate(BuildableCollection.instance.buildables[2], position, rotation).transform;
                 parent.name = "New Object";
             } 
 
-            GameObject newObjectInstance = Instantiate(newObject, position, rotation, parent);
+            GameObject newObjectInstance = Instantiate(BuildableCollection.instance.buildables[objectIndex], position, rotation, parent);
             newObjectInstance.name = "New Subobject";
         }
 

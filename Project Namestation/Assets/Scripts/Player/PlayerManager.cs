@@ -5,13 +5,11 @@ namespace Namestation.Player
 {
     public class PlayerManager : NetworkBehaviour
     {
-        public bool initialized = false;
         public CameraManager cameraManager;
         public InputManager inputManager;
         public InteractionManager interactionManager;
         public MovementManager movementManager;
 
-        #region Singleton
         public static PlayerManager instance;
 
         private void Start()
@@ -32,9 +30,6 @@ namespace Namestation.Player
                 playerComponent.playerManager = this;
                 playerComponent.Initialize();
             }
-
-            initialized = true;
         }
-        #endregion
     }
 }

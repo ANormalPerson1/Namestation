@@ -29,9 +29,9 @@ namespace Namestation.Player
             interactionInputEnabled = mode;
         }
 
-        protected override void Update()
+        private void Update()
         {
-            base.Update();
+            if (!initialized || !isLocalPlayer) return;
 
             if (interactionInputEnabled)
             {
