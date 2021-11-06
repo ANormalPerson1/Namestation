@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Namestation.Grids;
 using System.Linq;
-//using Namestation.Grids;
+using Mirror;
 
 namespace Namestation.Player
 {
-    public class InteractionManager : MonoBehaviour
+    public class InteractionManager : PlayerComponent
     {
         [SerializeField] float collisionDetectionRadius;
         [SerializeField] GameObject emptyGameObject;
@@ -16,17 +15,19 @@ namespace Namestation.Player
         [SerializeField] LayerMask wallLayerMask;
         [SerializeField] LayerMask entityLayerMask;
 
-        PlayerComponents playerComponents;
+        PlayerManager playerComponents;
         InputManager inputManager;
 
-        private void Start()
+        public override void Initialize()
         {
-            playerComponents = PlayerComponents.instance;
+            base.Initialize();
+            playerComponents = PlayerManager.instance;
             inputManager = playerComponents.inputManager;
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
             CheckPlaceObject();
         }
 
@@ -65,10 +66,7 @@ namespace Namestation.Player
 
         private void PlaceObjectAsNewStructure(Vector2 mousePosition)
         {
-            Transform parent = Instantiate(emptyGameObject, mousePosition, Quaternion.identity).transform;
-            parent.gameObject.name = "New Object";
-            GameObject floor = Instantiate(floorPrefab, mousePosition, Quaternion.identity, parent: parent);
-            floor.name = "Floor";
+            PlaceObjectServer(floorPrefab, mousePosition, Quaternion.identity, null);
         }
 
         private void PlaceObjectAddToExistingStructure(Vector2 mousePosition, Collider2D existingStructure)
@@ -79,9 +77,27 @@ namespace Namestation.Player
 
             if(GridClear(placementPosition.Value, structureTransform.rotation))
             {
-                GameObject floor = Instantiate(floorPrefab, placementPosition.Value, structureTransform.rotation, parent: structureTransform.parent);
-                floor.name = "Floor";
+                PlaceObjectServer(floorPrefab, placementPosition.Value, structureTransform.rotation, structureTransform.parent);
             }
+        }
+
+        [Command]
+        private void PlaceObjectServer(GameObject newObject, Vector2 position, Quaternion rotation, Transform parent)
+        {
+            PlaceObjectClient(newObject, position, rotation, parent);
+        }
+
+        [ClientRpc]
+        private void PlaceObjectClient(GameObject newObject, Vector2 position, Quaternion rotation, Transform parent)
+        {
+            if(parent == null)
+            {
+                parent = Instantiate(emptyGameObject, position, rotation).transform;
+                parent.name = "New Object";
+            } 
+
+            GameObject newObjectInstance = Instantiate(newObject, position, rotation, parent);
+            newObjectInstance.name = "New Subobject";
         }
 
         private Vector2? ConvertRawToPlacementPosition(Vector2 mousePosition, Transform structureTransform)

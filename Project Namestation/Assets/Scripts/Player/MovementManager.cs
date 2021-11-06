@@ -5,10 +5,11 @@ using Mirror;
 
 namespace Namestation.Player
 {
-    public class MovementManager : NetworkBehaviour
+    public class MovementManager : PlayerComponent
     {
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
             HandleMovement();
         }
 

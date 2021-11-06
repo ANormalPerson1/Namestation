@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Namestation.Player
 {
-    public class InputManager : MonoBehaviour
+    public class InputManager : PlayerComponent
     {
         #region Variables
         [HideInInspector] public bool movementInputEnabled = true;
@@ -16,20 +16,23 @@ namespace Namestation.Player
         Camera playerCamera;
         #endregion
 
-        private void Start()
+        public override void Initialize()
         {
-            cameraManager = PlayerComponents.instance.cameraManager;
+            base.Initialize();
+            cameraManager = PlayerManager.instance.cameraManager;
             playerCamera = cameraManager.playerCamera;
         }
 
-        public void SetInputEnabled(bool mode)
+        private void SetInputEnabled(bool mode)
         {
             movementInputEnabled = mode;
             interactionInputEnabled = mode;
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+
             if (interactionInputEnabled)
             {
                 interactionButtonPressed = Input.GetMouseButtonDown(0);
