@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Namestation.Interactables;
+using Namestation.Grids;
 using UnityEngine;
 using System.Linq;
 using Mirror;
@@ -14,14 +15,12 @@ namespace Namestation.Player
         [SerializeField] LayerMask wallLayerMask;
         [SerializeField] LayerMask entityLayerMask;
 
-        PlayerManager playerComponents;
         InputManager inputManager;
 
         public override void Initialize()
         {
             base.Initialize();
-            playerComponents = PlayerManager.instance;
-            inputManager = playerComponents.inputManager;
+            inputManager = playerManager.inputManager;
         }
 
         private void Update()
@@ -65,49 +64,104 @@ namespace Namestation.Player
 
         private void PlaceObjectAsNewStructure(Vector2 mousePosition)
         {
-            PlaceObjectServer(0, mousePosition, Quaternion.identity, null);
+            PlaceObjectServer(0, mousePosition, null);
         }
 
         private void PlaceObjectAddToExistingStructure(Vector2 mousePosition, Collider2D existingStructure)
         {
             Transform structureTransform = existingStructure.transform;
-            Vector2? placementPosition = ConvertRawToPlacementPosition(mousePosition, structureTransform);
-            if (placementPosition == null) return;
+            Vector2? localPlacementPosition = ConvertRawToLocalPlacementPosition(mousePosition, structureTransform);
+            if (localPlacementPosition == null) return;
+            Vector2 globalPlacementPosition = structureTransform.TransformPoint(localPlacementPosition.Value);
 
-            if(GridClear(placementPosition.Value, structureTransform.rotation))
+            if (GridClear(globalPlacementPosition, structureTransform.rotation))
             {
-                PlaceObjectServer(0, placementPosition.Value, structureTransform.rotation, structureTransform.parent);
+                BuildingGrid buildingGrid = structureTransform.parent.GetComponent<BuildingGrid>();
+                PlaceObjectServer(0, localPlacementPosition.Value, buildingGrid.gridName);
             }
         }
 
         [Command]
-        private void PlaceObjectServer(int objectIndex, Vector2 position, Quaternion rotation, Transform parent)
+        private void PlaceObjectServer(int objectIndex, Vector2 placementPosition, string parentObjectName)
         {
-            PlaceObjectClient(objectIndex, position, rotation, parent);
+            PlaceObjectClient(objectIndex, placementPosition, parentObjectName);
         }
 
         [ClientRpc]
-        private void PlaceObjectClient(int objectIndex, Vector2 position, Quaternion rotation, Transform parent)
+        private void PlaceObjectClient(int objectIndex, Vector2 placementPosition, string parentObjectName)
         {
-            if(parent == null)
-            {
-                parent = Instantiate(BuildableCollection.instance.buildables[2], position, rotation).transform;
-                parent.name = "New Object";
-            } 
+            //We need some other way of getting the parent, as this currently only respesents the local parent! Oh no!
 
-            GameObject newObjectInstance = Instantiate(BuildableCollection.instance.buildables[objectIndex], position, rotation, parent);
-            newObjectInstance.name = "New Subobject";
+            if(parentObjectName == null)
+            {
+                PlaceAsNewObjectClient(objectIndex, placementPosition);
+            }
+            else
+            {
+                AddObjectToExistingClient(objectIndex, placementPosition, parentObjectName);
+            }
         }
 
-        private Vector2? ConvertRawToPlacementPosition(Vector2 mousePosition, Transform structureTransform)
+        private void PlaceAsNewObjectClient(int objectIndex, Vector2 globalPosition)
+        {
+            Transform parent = Instantiate(BuildableCollection.instance.buildables[2], globalPosition, Quaternion.identity).transform;
+            parent.name = "New Object";
+            //Complete this! You need some way of getting the parent here!!!
+
+            parent.gameObject.AddComponent<BuildingGrid>();
+            GameObject prefab = BuildableCollection.instance.buildables[objectIndex];
+            AddSubObjectClient(prefab, globalPosition, parent);
+        }
+
+
+        private void AddObjectToExistingClient(int objectIndex, Vector2 localPosition, string parentObjectName)
+        {
+            BuildableCollection buildableCollection = BuildableCollection.instance;
+            Transform parent = null;
+            foreach (BuildingGrid buildingGrid in buildableCollection.buildingGrids)
+            {
+                if(buildingGrid.gridName.Equals(parentObjectName))
+                {
+                    parent = buildingGrid.transform;
+                    break;
+                }
+            }
+
+            if(parent == null)
+            {
+                Debug.LogError("Warning! Parent not found!");
+                return;
+            }
+
+            Vector3 globalPosition = parent.TransformPoint(localPosition);
+            GameObject prefab = BuildableCollection.instance.buildables[objectIndex];
+            AddSubObjectClient(prefab, globalPosition, parent);
+        }
+
+        private void AddSubObjectClient(GameObject prefab, Vector3 globalPosition, Transform parent)
+        {
+            GameObject newObjectInstance = Instantiate(prefab, globalPosition, parent.rotation, parent);
+            newObjectInstance.name = "New Subobject";
+
+            BuildingGrid buildingGrid = parent.GetComponent<BuildingGrid>();
+
+            GridObject gridObject = newObjectInstance.GetComponent<GridObject>();
+            Vector2 localPosition = parent.InverseTransformPoint(globalPosition);
+            gridObject.position = new Vector2Int(Mathf.RoundToInt(localPosition.x), Mathf.RoundToInt(localPosition.y));
+
+            buildingGrid.gridObjects.Add(gridObject);
+        }
+
+
+
+        private Vector2? ConvertRawToLocalPlacementPosition(Vector2 mousePosition, Transform structureTransform)
         {
             //Convert the position to local space, check where to place relative to the object's local grid and reconvert into world space.
             Vector2 baseLocalPosition = structureTransform.InverseTransformPoint(mousePosition);
             Vector2? localPlacementPosition = CalculateObjectLocalPlacementPosition(baseLocalPosition.normalized);
             if(localPlacementPosition != null)
             {
-                Vector2 placementPosition = structureTransform.TransformPoint(localPlacementPosition.Value);
-                return placementPosition;
+                return localPlacementPosition;
             }
             return null;
         }

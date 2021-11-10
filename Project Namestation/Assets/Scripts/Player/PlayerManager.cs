@@ -10,20 +10,8 @@ namespace Namestation.Player
         public InteractionManager interactionManager;
         public MovementManager movementManager;
 
-        public static PlayerManager instance;
-
         private void Start()
         {
-            if (!isLocalPlayer) return;
-
-            if (instance != null)
-            {
-                Debug.LogError("More than 1 instance of playercomponents found!");
-                return;
-            }
-
-            instance = this;
-
             PlayerComponent[] playerComponents = GetComponents<PlayerComponent>();
             foreach(PlayerComponent playerComponent in playerComponents)
             {

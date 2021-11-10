@@ -19,7 +19,7 @@ namespace Namestation.Player
         public override void Initialize()
         {
             base.Initialize();
-            cameraManager = PlayerManager.instance.cameraManager;
+            cameraManager = playerManager.cameraManager;
             playerCamera = cameraManager.playerCamera;
         }
 

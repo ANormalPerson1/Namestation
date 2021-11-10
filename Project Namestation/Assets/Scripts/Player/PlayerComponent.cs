@@ -11,7 +11,6 @@ public class PlayerComponent : NetworkBehaviour
     {
         if (!isLocalPlayer)
         {
-            Debug.Log("wat");
             InitializeNotLocalPlayer();
             return;
         }
