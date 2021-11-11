@@ -76,58 +76,39 @@ namespace Namestation.Player
 
             if (GridClear(globalPlacementPosition, structureTransform.rotation))
             {
-                BuildingGrid buildingGrid = structureTransform.parent.GetComponent<BuildingGrid>();
-                PlaceObjectServer(0, localPlacementPosition.Value, buildingGrid.gridName);
+                Vector2 localPositionRelativeToParent = structureTransform.parent.InverseTransformPoint(globalPlacementPosition);
+                PlaceObjectServer(0, localPositionRelativeToParent, structureTransform.parent);
             }
         }
 
         [Command]
-        private void PlaceObjectServer(int objectIndex, Vector2 placementPosition, string parentObjectName)
+        private void PlaceObjectServer(int objectIndex, Vector2 placementPosition, Transform parent)
         {
-            PlaceObjectClient(objectIndex, placementPosition, parentObjectName);
-        }
-
-        [ClientRpc]
-        private void PlaceObjectClient(int objectIndex, Vector2 placementPosition, string parentObjectName)
-        {
-            //We need some other way of getting the parent, as this currently only respesents the local parent! Oh no!
-
-            if(parentObjectName == null)
+            if (parent == null)
             {
-                PlaceAsNewObjectClient(objectIndex, placementPosition);
+                Transform newParent = Instantiate(BuildableCollection.instance.buildables[2], placementPosition, Quaternion.identity).transform;
+                NetworkServer.Spawn(newParent.gameObject);
+
+                PlaceAsNewObjectClient(objectIndex, placementPosition, newParent);
             }
             else
             {
-                AddObjectToExistingClient(objectIndex, placementPosition, parentObjectName);
+                AddObjectToExistingClient(objectIndex, placementPosition, parent);
             }
         }
 
-        private void PlaceAsNewObjectClient(int objectIndex, Vector2 globalPosition)
+        [ClientRpc]
+        private void PlaceAsNewObjectClient(int objectIndex, Vector2 globalPosition, Transform parent)
         {
-            Transform parent = Instantiate(BuildableCollection.instance.buildables[2], globalPosition, Quaternion.identity).transform;
-            parent.name = "New Object";
-            //Complete this! You need some way of getting the parent here!!!
-
-            parent.gameObject.AddComponent<BuildingGrid>();
             GameObject prefab = BuildableCollection.instance.buildables[objectIndex];
             AddSubObjectClient(prefab, globalPosition, parent);
         }
 
-
-        private void AddObjectToExistingClient(int objectIndex, Vector2 localPosition, string parentObjectName)
+        [ClientRpc]
+        private void AddObjectToExistingClient(int objectIndex, Vector2 localPosition, Transform parent)
         {
-            BuildableCollection buildableCollection = BuildableCollection.instance;
-            Transform parent = null;
-            foreach (BuildingGrid buildingGrid in buildableCollection.buildingGrids)
-            {
-                if(buildingGrid.gridName.Equals(parentObjectName))
-                {
-                    parent = buildingGrid.transform;
-                    break;
-                }
-            }
 
-            if(parent == null)
+            if (parent == null)
             {
                 Debug.LogError("Warning! Parent not found!");
                 return;
