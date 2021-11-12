@@ -15,9 +15,9 @@ namespace Namestation.Grids
         public int netID;
         public List<GridObject> gridObjects;
 
-        public void SetNetId(int newID)
+        public BuildingGrid(int netID)
         {
-            netID = newID;
+            this.netID = netID;
         }
 
         public SerializableBuildingGrid GetSeriarizableBuildingGrid ()
@@ -35,13 +35,7 @@ namespace Namestation.Grids
         public SerializableBuildingGrid (BuildingGrid buildingGrid)
         {
             netID = buildingGrid.netID;
-            List<SerializableGridObject> serializableGridObjects = new List<SerializableGridObject>();
-            foreach(GridObject gridObject in buildingGrid.gridObjects)
-            {
-                serializableGridObjects.Add(gridObject.GetSerializableGridObject());
-            }
-
-            gridObjectWrapper = new GridObjectWrapper(serializableGridObjects);
+            gridObjectWrapper = new GridObjectWrapper(buildingGrid.gridObjects);
         }
     }
 
@@ -50,8 +44,14 @@ namespace Namestation.Grids
     {
         public List<SerializableBuildingGrid> serializableBuildingGrids;
 
-        public BuildingGridWrapper (List<SerializableBuildingGrid> serializableBuildingGrids)
+        public BuildingGridWrapper (List<BuildingGrid> buildingGrids)
         {
+            List<SerializableBuildingGrid> serializableBuildingGrids = new List<SerializableBuildingGrid>();
+            foreach (BuildingGrid buildingGrid in buildingGrids)
+            {
+                serializableBuildingGrids.Add(buildingGrid.GetSeriarizableBuildingGrid());
+            }
+             
             this.serializableBuildingGrids = serializableBuildingGrids;
         }
     }

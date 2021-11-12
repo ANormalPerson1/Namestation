@@ -78,6 +78,7 @@ namespace Namestation.Player
 
             if (GridClear(globalPlacementPosition, structureTransform.rotation))
             {
+                Debug.Log(structureTransform.parent);
                 Vector2 localPositionRelativeToParent = structureTransform.parent.InverseTransformPoint(globalPlacementPosition);
                 PlaceObjectServer(0, localPositionRelativeToParent, structureTransform.parent);
             }
@@ -90,47 +91,53 @@ namespace Namestation.Player
             {
                 Transform newParent = Instantiate(BuildableCollection.instance.buildables[2], placementPosition, Quaternion.identity).transform;
                 NetworkServer.Spawn(newParent.gameObject);
-                //Do a load method on client join!!!
                 //Positions are synced via net components - do seperate system for round end save!
                 BuildingGrid buildingGrid = newParent.GetComponent<BuildingGrid>();
                 SaveManager.buildingGrids.Add(buildingGrid);
-
-                AddSubObject(objectIndex, placementPosition, newParent);
-                PlaceObjectClient(objectIndex, placementPosition, newParent);
+                PlaceObject(objectIndex, placementPosition, newParent);
             }
             else
             {
                 //Position is passed locally for existing objects to reduce chance of error.
                 Vector3 globalPosition = parent.TransformPoint(placementPosition);
-
-                AddSubObject(objectIndex, globalPosition, parent);
-                PlaceObjectClient(objectIndex, globalPosition, parent);
+                PlaceObject(objectIndex, globalPosition, parent);
             }
         }
 
-        [ClientRpc]
-        private void PlaceObjectClient(int objectIndex, Vector2 placementPosition, Transform parent)
-        {
-            AddSubObject(objectIndex, placementPosition, parent);
-        }
-
-        private void AddSubObject(int objectIndex, Vector3 globalPosition, Transform parent)
+        private void PlaceObject(int objectIndex, Vector3 position, Transform parent)
         {
             GameObject prefab = BuildableCollection.instance.buildables[objectIndex];
-            GameObject newObjectInstance = Instantiate(prefab, globalPosition, parent.rotation, parent);
-            newObjectInstance.name = "New Subobject";
+
+            GameObject newObjectInstance = Instantiate(prefab, position, parent.rotation);
+            NetworkServer.Spawn(newObjectInstance);
 
             GridObject gridObject = newObjectInstance.GetComponent<GridObject>();
-            Vector2 localPosition = parent.InverseTransformPoint(globalPosition);
-            gridObject.position = new Vector2Int(Mathf.RoundToInt(localPosition.x), Mathf.RoundToInt(localPosition.y));
-
             BuildingGrid buildingGrid = parent.GetComponent<BuildingGrid>();
             buildingGrid.gridObjects.Add(gridObject);
 
-            if(isServer)
-            {
-                SaveManager.Save();
-            }
+            AddSubObject(newObjectInstance, position, parent);
+            PlaceObjectClient(newObjectInstance, position, parent);
+        }
+
+        [ClientRpc]
+        private void PlaceObjectClient(GameObject newObject, Vector2 placementPosition, Transform parent)
+        {
+            AddSubObject(newObject, placementPosition, parent);
+        }
+
+        private void AddSubObject(GameObject newObject, Vector3 globalPosition, Transform parent)
+        {
+            newObject.transform.parent = parent;
+        
+            GridObject gridObject = newObject.GetComponent<GridObject>();
+            newObject.name = gridObject.gridObjectSO.name;
+
+            Vector2 localPosition = parent.InverseTransformPoint(globalPosition);
+            gridObject.position = new Vector2Int(Mathf.RoundToInt(localPosition.x), Mathf.RoundToInt(localPosition.y));;
+            gridObject.netID = (int)newObject.GetComponent<NetworkIdentity>().netId;
+            gridObject.currentHealth = gridObject.gridObjectSO.health;
+
+            //Save everything (position, parent, health, ect.)
         }
 
         private Vector2? ConvertRawToLocalPlacementPosition(Vector2 mousePosition, Transform structureTransform)
