@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 371418198007713470}
   - component: {fileID: 5820347084301911959}
   - component: {fileID: 5466455434208893452}
-  - component: {fileID: 4551995975072023048}
+  - component: {fileID: 7595255356106285466}
   m_Layer: 0
   m_Name: Empty GameObject
   m_TagString: Untagged
@@ -94,7 +94,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &4551995975072023048
+--- !u!114 &7595255356106285466
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,5 +106,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52e4a5aea5347234e93d891e83baae1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridName: New Object
+  netID: 0
   gridObjects: []
