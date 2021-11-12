@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Namestation.Interactables;
 using Namestation.Grids;
+using Namestation.SaveSystem;
 using UnityEngine;
 using System.Linq;
 using Mirror;
@@ -12,6 +13,7 @@ namespace Namestation.Player
     {
         [SerializeField] float collisionDetectionRadius;
         [SerializeField] LayerMask floorLayerMask;
+        [SerializeField] GridObjectSO currentlyBuildingObject;
         [SerializeField] LayerMask wallLayerMask;
         [SerializeField] LayerMask entityLayerMask;
 
@@ -88,52 +90,48 @@ namespace Namestation.Player
             {
                 Transform newParent = Instantiate(BuildableCollection.instance.buildables[2], placementPosition, Quaternion.identity).transform;
                 NetworkServer.Spawn(newParent.gameObject);
+                //Do a load method on client join!!!
+                //Positions are synced via net components - do seperate system for round end save!
+                BuildingGrid buildingGrid = newParent.GetComponent<BuildingGrid>();
+                SaveManager.buildingGrids.Add(buildingGrid);
 
-                PlaceAsNewObjectClient(objectIndex, placementPosition, newParent);
+                AddSubObject(objectIndex, placementPosition, newParent);
+                PlaceObjectClient(objectIndex, placementPosition, newParent);
             }
             else
             {
-                AddObjectToExistingClient(objectIndex, placementPosition, parent);
+                //Position is passed locally for existing objects to reduce chance of error.
+                Vector3 globalPosition = parent.TransformPoint(placementPosition);
+
+                AddSubObject(objectIndex, globalPosition, parent);
+                PlaceObjectClient(objectIndex, globalPosition, parent);
             }
         }
 
         [ClientRpc]
-        private void PlaceAsNewObjectClient(int objectIndex, Vector2 globalPosition, Transform parent)
+        private void PlaceObjectClient(int objectIndex, Vector2 placementPosition, Transform parent)
         {
-            GameObject prefab = BuildableCollection.instance.buildables[objectIndex];
-            AddSubObjectClient(prefab, globalPosition, parent);
+            AddSubObject(objectIndex, placementPosition, parent);
         }
 
-        [ClientRpc]
-        private void AddObjectToExistingClient(int objectIndex, Vector2 localPosition, Transform parent)
+        private void AddSubObject(int objectIndex, Vector3 globalPosition, Transform parent)
         {
-
-            if (parent == null)
-            {
-                Debug.LogError("Warning! Parent not found!");
-                return;
-            }
-
-            Vector3 globalPosition = parent.TransformPoint(localPosition);
             GameObject prefab = BuildableCollection.instance.buildables[objectIndex];
-            AddSubObjectClient(prefab, globalPosition, parent);
-        }
-
-        private void AddSubObjectClient(GameObject prefab, Vector3 globalPosition, Transform parent)
-        {
             GameObject newObjectInstance = Instantiate(prefab, globalPosition, parent.rotation, parent);
             newObjectInstance.name = "New Subobject";
-
-            BuildingGrid buildingGrid = parent.GetComponent<BuildingGrid>();
 
             GridObject gridObject = newObjectInstance.GetComponent<GridObject>();
             Vector2 localPosition = parent.InverseTransformPoint(globalPosition);
             gridObject.position = new Vector2Int(Mathf.RoundToInt(localPosition.x), Mathf.RoundToInt(localPosition.y));
 
+            BuildingGrid buildingGrid = parent.GetComponent<BuildingGrid>();
             buildingGrid.gridObjects.Add(gridObject);
+
+            if(isServer)
+            {
+                SaveManager.Save();
+            }
         }
-
-
 
         private Vector2? ConvertRawToLocalPlacementPosition(Vector2 mousePosition, Transform structureTransform)
         {

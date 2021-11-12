@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4270895829921875586}
   - component: {fileID: 9065099986314657861}
   - component: {fileID: 4268903164798134638}
-  - component: {fileID: 6849443779448615490}
+  - component: {fileID: 2767219929418312571}
   m_Layer: 8
   m_Name: Wall
   m_TagString: Untagged
@@ -137,8 +137,8 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 33046
---- !u!114 &6849443779448615490
+  m_InstanceId: 48970
+--- !u!114 &2767219929418312571
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,8 +150,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3864c55a002da2243a1a8a0f23b22a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  structureName: Wall
-  health: 100
-  spriteIndex: 1
+  gridObjectSO: {fileID: 0}
   position: {x: 0, y: 0}
-  type: 0
+  currentHealth: 0

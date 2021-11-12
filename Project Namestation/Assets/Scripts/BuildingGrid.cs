@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Namestation.Grids
 {
@@ -14,6 +15,22 @@ namespace Namestation.Grids
         public BuildingGrid (string newName)
         {
             gridName = newName;
+        }
+
+        public string ToJson()
+        {
+            if (gridObjects.Count <= 0) return null;
+            //{ "gridName":"New Object","gridObjects":[{ "m_FileID":-172,"m_PathID":0}]}
+
+            StringBuilder jsonString = new StringBuilder("{ \"gridName\":\"" + gridName+ "\",\"gridObjects\":[" + JsonUtility.ToJson(gridObjects[0]));
+            for (int i = 1; i < gridObjects.Count; i++)
+            {
+                string buildingGridJson = JsonUtility.ToJson(gridObjects[i]);
+                jsonString.Append("," + buildingGridJson);
+            }
+            jsonString.Append("]}");
+
+            return jsonString.ToString();
         }
 
         /// <summary>
