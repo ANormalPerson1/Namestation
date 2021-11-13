@@ -83,11 +83,9 @@ namespace Namestation.Saving
             GameObject prefab = ResourceManager.GetGridPrefab(gridObjectSO.type.ToString());
             GameObject gridObjectGO = Instantiate(prefab, Vector3.zero, parent.rotation, parent);
             NetworkServer.Spawn(gridObjectGO);
-            Debug.Log(gridObjectGO);
             gridObjectGO.transform.localPosition = new Vector2(localPosition.x, localPosition.y);
          
             GridObject gridObject = gridObjectGO.GetComponent<GridObject>();
-            Debug.Log(gridObject);
             gridObject.gridName = gridName;
             gridObject.gridObjectSO = gridObjectSO;
             gridObject.currentHealth = currentHealth;
