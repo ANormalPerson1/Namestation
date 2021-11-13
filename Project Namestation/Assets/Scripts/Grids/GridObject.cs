@@ -8,7 +8,7 @@ namespace Namestation.Grids
     {
         [SyncVar] public string gridName;
         [SyncVar] public GridObjectSO gridObjectSO;
-        [HideInInspector, SyncVar] public Vector2Int position;
+        [SyncVar] public Vector2Int position;
         [HideInInspector, SyncVar] public float currentHealth;
         [HideInInspector, SyncVar] public Transform currentParent;
 
@@ -21,8 +21,12 @@ namespace Namestation.Grids
 
         public void TryAssignValues()
         {
-            if(currentParent != null) transform.parent = currentParent;
-            if(gridName != null) gameObject.name = gridName;
+            if(currentParent != null)
+            {
+                transform.parent = currentParent;
+                gameObject.name = gridName;
+                transform.localPosition = new Vector2(position.x, position.y);
+            }
         }
 
         public GridObject()
@@ -47,17 +51,15 @@ namespace Namestation.Grids
     [Serializable]
     public class SerializableGridObject
     {
-        public GridObjectSO gridObjectSO;
+        public string scriptableObjectName;
         [HideInInspector] public Vector2Int position;
         [HideInInspector] public float currentHealth;
-        [HideInInspector] public Transform currentParent;
 
         public SerializableGridObject(GridObject gridObject)
         {
-            gridObjectSO = gridObject.gridObjectSO;
+            scriptableObjectName = gridObject.gridObjectSO.name;
             position = gridObject.position;
             currentHealth = gridObject.currentHealth;
-            currentParent = gridObject.currentParent;
         }
     }
 

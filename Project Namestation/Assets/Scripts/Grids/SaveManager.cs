@@ -9,19 +9,31 @@ namespace Namestation.Saving
     {
         public static List<BuildingGrid> buildingGrids = new List<BuildingGrid>();
         private static string savePath = Application.dataPath + "saveFile.json";
+        public static bool isSaving = false;
 
         public static void Load()
         {
-            string jsonString = File.ReadAllText(savePath);
-            LoadObjects(jsonString);
+            string jsonString = null;
+            if(File.Exists(savePath))
+            {
+                jsonString = File.ReadAllText(savePath);
+            }
+
+            if (jsonString == "" || jsonString == null)
+            {
+                Debug.Log("Save file not found, starting new game.");
+            }
+            else
+            {
+                Debug.Log("Save file found, loading game....");
+                LoadObjects(jsonString);
+            }
         }
 
         public static void LoadObjects(string jsonString)
         {
-            if (jsonString == "" || jsonString == null) return;
             BuildingGridWrapper buildingGridWrapper = JsonUtility.FromJson<BuildingGridWrapper>(jsonString);
             List<SerializableBuildingGrid> serializableBuildingGrids = buildingGridWrapper.serializableBuildingGrids;
-
             buildingGrids.Clear();
 
             foreach (SerializableBuildingGrid serializableBuildingGrid in serializableBuildingGrids)
@@ -29,22 +41,29 @@ namespace Namestation.Saving
                 BuildingGrid buildingGrid = SaveLoader.instance.LoadBuildingGrid(serializableBuildingGrid);
                 buildingGrids.Add(buildingGrid);
             }
+
+            Debug.Log("Game loaded!");
         }
 
         public static void Save()
         {
+            isSaving = true;
             SaveObjects();
         }
 
         public static void SaveObjects()
         {
-            if (buildingGrids.Count <= 0) return;
+            if (buildingGrids.Count <= 0)
+            {
+                isSaving = false;
+                return;
+            }
 
             BuildingGridWrapper buildingGridWrapper = new BuildingGridWrapper(buildingGrids);
             string json = JsonUtility.ToJson(buildingGridWrapper, true);
 
             File.WriteAllText(savePath, json.ToString());
-            Load();
+            isSaving = false;
         }
     }
 }

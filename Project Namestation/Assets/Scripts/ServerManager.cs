@@ -8,15 +8,30 @@ namespace Namestation.Server
 {
     public class ServerManager : NetworkBehaviour
     {
-        private void Start()
+        private void Update()
         {
-            if (!isServer) return;
-            SaveManager.Load();
+            if(Input.GetKey(KeyCode.Keypad5))
+            {
+                ServerSaveAndQuitGame();
+            }
         }
 
-        private void OnApplicationQuit()
+        [Command]
+        private void ServerSaveAndQuitGame()
+        {
+            Debug.Log("Saving game...");
+            StartCoroutine(IE_Save());
+        }
+
+        IEnumerator IE_Save()
         {
             SaveManager.Save();
+            while(SaveManager.isSaving)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            Debug.Log("Finished saving!");
+            Application.Quit();
         }
     }
 }

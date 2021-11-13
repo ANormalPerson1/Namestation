@@ -26,9 +26,9 @@ namespace Namestation.Grids
 
         public SerializableBuildingGrid GetSeriarizableBuildingGrid()
         {
-            gridName = transform.name;
-            Rigidbody rigidBody = GetComponent<Rigidbody>();
-            Vector3 gridVelocity = rigidBody.velocity;
+            gridName = gameObject.name;
+            Rigidbody2D rigidBody2D = gameObject.GetComponent<Rigidbody2D>();
+            Vector3 gridVelocity = rigidBody2D.velocity;
             Vector3 gridPosition = transform.position;
             Quaternion gridRotation = transform.rotation;
 
@@ -65,6 +65,7 @@ namespace Namestation.Grids
             List<SerializableBuildingGrid> serializableBuildingGrids = new List<SerializableBuildingGrid>();
             foreach (BuildingGrid buildingGrid in buildingGrids)
             {
+                Debug.Log(buildingGrid.name);
                 serializableBuildingGrids.Add(buildingGrid.GetSeriarizableBuildingGrid());
             }
 

@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 372694615}
   - component: {fileID: 372694618}
-  - component: {fileID: 372694617}
   - component: {fileID: 372694616}
   m_Layer: 0
   m_Name: Game Manager
@@ -170,20 +169,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
---- !u!114 &372694617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 372694614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530f00f3c505362419dc41cc4bb7115a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
 --- !u!114 &372694618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,7 +182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneId: 4126731633
-  serverOnly: 0
+  serverOnly: 1
   visible: 0
   m_AssetId: 
   hasSpawned: 0
