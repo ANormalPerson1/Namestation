@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Namestation.Interactables;
 using Namestation.Grids;
-using Namestation.SaveSystem;
+using Namestation.Saving;
 using UnityEngine;
 using System.Linq;
 using Mirror;
@@ -93,6 +93,7 @@ namespace Namestation.Player
                 NetworkServer.Spawn(newParent.gameObject);
                 BuildingGrid buildingGrid = newParent.GetComponent<BuildingGrid>();
                 SaveManager.buildingGrids.Add(buildingGrid);
+                SyncParentObject(buildingGrid);
                 PlaceObject(objectIndex, placementPosition, newParent);
             }
             else
@@ -101,6 +102,12 @@ namespace Namestation.Player
                 Vector3 globalPosition = parent.TransformPoint(placementPosition);
                 PlaceObject(objectIndex, globalPosition, parent);
             }
+        }
+
+        [ClientRpc]
+        private void SyncParentObject(BuildingGrid buildingGrid)
+        {
+            buildingGrid.TryAssignValues();
         }
 
         private void PlaceObject(int objectIndex, Vector3 position, Transform parent)
@@ -112,16 +119,9 @@ namespace Namestation.Player
             GameObject newObjectInstance = Instantiate(prefab, position, parent.rotation);
             
             NetworkServer.Spawn(newObjectInstance);
-            DebugClient(newObjectInstance);
             GridObject gridObject = newObjectInstance.GetComponent<GridObject>();
             gridObject.gameObject.name = gridObject.gridObjectSO.name;
             SaveSubObject(gridObject, parent.gameObject, position);
-        }
-
-        [ClientRpc]
-        void DebugClient(GameObject gameObject)
-        {
-            Debug.Log(gameObject);
         }
 
         private void SaveSubObject(GridObject gridObject, GameObject parent, Vector3 placementPosition)

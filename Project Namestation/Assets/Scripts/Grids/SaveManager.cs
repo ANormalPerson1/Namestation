@@ -5,9 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Namestation.Grids;
+using Namestation.Interactables;
 using Mirror;
 
-namespace Namestation.SaveSystem
+namespace Namestation.Saving
 {
     public static class SaveManager
     {
@@ -25,30 +26,20 @@ namespace Namestation.SaveSystem
             BuildingGridWrapper buildingGridWrapper = JsonUtility.FromJson<BuildingGridWrapper>(jsonString);
             List<SerializableBuildingGrid> serializableBuildingGrids = buildingGridWrapper.serializableBuildingGrids;
 
-            //Delete existing or something?
             buildingGrids.Clear();
 
             foreach (SerializableBuildingGrid serializableBuildingGrid in serializableBuildingGrids)
             {
-                //Check if object with transform id exists!
-                BuildingGrid buildingGrid = new BuildingGrid(serializableBuildingGrid.netID);
-                //if(T)
+                BuildingGrid buildingGrid = SaveLoader.instance.LoadBuildingGrid(serializableBuildingGrid);
+                buildingGrids.Add(buildingGrid);
 
                 //Link/add componment to corresponding transform
-                foreach (SerializableGridObject serializableGridObject in serializableBuildingGrid.gridObjectWrapper.serializableGridObjects)
-                {
-                    GridObject gridObject = new GridObject
-                        (serializableGridObject.gridObjectSO,
-                        serializableGridObject.position,
-                        serializableGridObject.currentHealth,
-                        serializableGridObject.currentParent);
-                    buildingGrid.gridObjects.Add(gridObject);
-                    //if(clien)
-                    //Instantiate grid object
-                }
+               
             }
 
         }
+
+       
 
         public static void Save()
         {

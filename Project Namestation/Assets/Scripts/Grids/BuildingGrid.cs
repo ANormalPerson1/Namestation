@@ -1,4 +1,5 @@
 using UnityEngine;
+using Mirror;
 using System.Collections.Generic;
 using System;
 
@@ -7,31 +8,48 @@ namespace Namestation.Grids
     /// <summary>
     /// Grids used by the namestation building system (Examples: Station, asteroid, planet, ship)
     /// </summary>
-    public class BuildingGrid : MonoBehaviour
+    public class BuildingGrid : NetworkBehaviour
     {
-        public int netID;
-        public List<GridObject> gridObjects;
+        [SyncVar] public string gridName;
+        [HideInInspector] public List<GridObject> gridObjects;
 
-        public BuildingGrid(int netID)
+        private void Start()
         {
-            this.netID = netID;
+            TryAssignValues();
+        }
+
+        public void TryAssignValues()
+        {
+            if (gridName != null) gameObject.name = gridName;
         }
 
         public SerializableBuildingGrid GetSeriarizableBuildingGrid()
         {
-            return new SerializableBuildingGrid(this);
+            gridName = transform.name;
+            Rigidbody rigidBody = GetComponent<Rigidbody>();
+            Vector3 gridVelocity = rigidBody.velocity;
+            Vector3 gridPosition = transform.position;
+            Quaternion gridRotation = transform.rotation;
+
+            return new SerializableBuildingGrid(this, gridVelocity, gridPosition, gridRotation);
         }
     }
 
     [Serializable]
     public class SerializableBuildingGrid
     {
-        public int netID;
+        public string gridName;
+        public Vector2 gridVelocity;
+        public Vector2 gridPosition;
+        public Quaternion gridRotation;
         public GridObjectWrapper gridObjectWrapper;
 
-        public SerializableBuildingGrid(BuildingGrid buildingGrid)
+        public SerializableBuildingGrid(BuildingGrid buildingGrid, Vector2 velocity, Vector2 position, Quaternion rotation)
         {
-            netID = buildingGrid.netID;
+            gridName = buildingGrid.gridName;
+            gridVelocity = velocity;
+            gridPosition = position;
+            gridRotation = rotation;
             gridObjectWrapper = new GridObjectWrapper(buildingGrid.gridObjects);
         }
     }

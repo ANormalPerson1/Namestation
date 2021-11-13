@@ -16,9 +16,6 @@ namespace Namestation.Grids
 
         private void Start()
         {
-            //Transform.parent/name can't be synhronized directly, thus they have to be saved and loaded seperately
-            //if(currentParent != null) transform.parent = currentParent;
-            //if(gridName != null) gameObject.name = gridName;
             TryAssignValues();
         }
 
