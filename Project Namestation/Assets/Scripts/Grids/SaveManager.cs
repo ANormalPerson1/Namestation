@@ -1,12 +1,7 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Namestation.Grids;
-using Namestation.Interactables;
-using Mirror;
 
 namespace Namestation.Saving
 {
@@ -23,6 +18,7 @@ namespace Namestation.Saving
 
         public static void LoadObjects(string jsonString)
         {
+            if (jsonString == "" || jsonString == null) return;
             BuildingGridWrapper buildingGridWrapper = JsonUtility.FromJson<BuildingGridWrapper>(jsonString);
             List<SerializableBuildingGrid> serializableBuildingGrids = buildingGridWrapper.serializableBuildingGrids;
 
@@ -32,14 +28,8 @@ namespace Namestation.Saving
             {
                 BuildingGrid buildingGrid = SaveLoader.instance.LoadBuildingGrid(serializableBuildingGrid);
                 buildingGrids.Add(buildingGrid);
-
-                //Link/add componment to corresponding transform
-               
             }
-
         }
-
-       
 
         public static void Save()
         {

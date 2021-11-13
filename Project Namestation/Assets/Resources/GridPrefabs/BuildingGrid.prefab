@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5466455434208893452}
   - component: {fileID: 7595255356106285466}
   m_Layer: 0
-  m_Name: Empty GameObject
+  m_Name: BuildingGrid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106,5 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52e4a5aea5347234e93d891e83baae1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  netID: 0
+  syncMode: 0
+  syncInterval: 0.1
+  gridName: Building Grid
   gridObjects: []

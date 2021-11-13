@@ -132,6 +132,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 372694615}
+  - component: {fileID: 372694618}
+  - component: {fileID: 372694617}
   - component: {fileID: 372694616}
   m_Layer: 0
   m_Name: Game Manager
@@ -163,13 +165,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 372694614}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8da118f5b2a2aa848bc7cf1eda2a5b22, type: 3}
+  m_Script: {fileID: 11500000, guid: eb1409feb90d6b24a8fd699f18b5ebdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildables:
-  - {fileID: 4270895829921875585, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
-  - {fileID: 4270895829921875585, guid: 2444a5204e2edec4ab7a9d4f3ff737f7, type: 3}
-  - {fileID: 7577678346104983423, guid: 2f6b0c287134b154797630beda57e13a, type: 3}
+  syncMode: 0
+  syncInterval: 0.1
+--- !u!114 &372694617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372694614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 530f00f3c505362419dc41cc4bb7115a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+--- !u!114 &372694618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372694614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 4126731633
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
 --- !u!1 &859647529
 GameObject:
   m_ObjectHideFlags: 0

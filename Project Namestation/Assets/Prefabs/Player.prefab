@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  playerManager: {fileID: 0}
 --- !u!114 &5025189858764882008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  playerManager: {fileID: 0}
   playerCamera: {fileID: 234045473348374435}
 --- !u!114 &4282877011775290896
 MonoBehaviour:
@@ -129,6 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  playerManager: {fileID: 0}
   movementInputEnabled: 1
   interactionInputEnabled: 1
   interactionButtonPressed: 0
@@ -147,12 +150,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  playerManager: {fileID: 0}
   collisionDetectionRadius: 1.5
-  emptyGameObject: {fileID: 7577678346104983423, guid: 2f6b0c287134b154797630beda57e13a, type: 3}
-  floorPrefab: {fileID: 4270895829921875585, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
   floorLayerMask:
     serializedVersion: 2
     m_Bits: 128
+  currentlyBuildingObject: {fileID: 11400000, guid: 7dff827ffac06c64db7c018325c2c87a, type: 2}
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 256

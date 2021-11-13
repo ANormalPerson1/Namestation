@@ -17,12 +17,15 @@ namespace Namestation.Player
         [SerializeField] LayerMask wallLayerMask;
         [SerializeField] LayerMask entityLayerMask;
 
+        GameObject buildingGridPrefab;
+
         InputManager inputManager;
 
         public override void Initialize()
         {
             base.Initialize();
             inputManager = playerManager.inputManager;
+            buildingGridPrefab = ResourceManager.GetGridPrefab("BuildingGrid");
         }
 
         private void Update()
@@ -66,7 +69,7 @@ namespace Namestation.Player
 
         private void PlaceObjectAsNewStructure(Vector2 mousePosition)
         {
-            PlaceObjectServer(0, mousePosition, null);
+            PlaceObjectServer(currentlyBuildingObject.name, mousePosition, null);
         }
 
         private void PlaceObjectAddToExistingStructure(Vector2 mousePosition, Collider2D existingStructure)
@@ -80,27 +83,29 @@ namespace Namestation.Player
             {
                 Debug.Log(structureTransform.parent);
                 Vector2 localPositionRelativeToParent = structureTransform.parent.InverseTransformPoint(globalPlacementPosition);
-                PlaceObjectServer(0, localPositionRelativeToParent, structureTransform.parent);
+                PlaceObjectServer(currentlyBuildingObject.name, localPositionRelativeToParent, structureTransform.parent);
             }
         }
 
         [Command]
-        private void PlaceObjectServer(int objectIndex, Vector2 placementPosition, Transform parent)
+        private void PlaceObjectServer(string gridObjectSOString, Vector2 placementPosition, Transform parent)
         {
+            GridObjectSO gridObjectSO = ResourceManager.GetGridObjectSO(gridObjectSOString);
             if (parent == null)
             {
-                Transform newParent = Instantiate(BuildableCollection.instance.buildables[2], placementPosition, Quaternion.identity).transform;
+                Transform newParent = Instantiate(buildingGridPrefab, placementPosition, Quaternion.identity).transform;
                 NetworkServer.Spawn(newParent.gameObject);
                 BuildingGrid buildingGrid = newParent.GetComponent<BuildingGrid>();
                 SaveManager.buildingGrids.Add(buildingGrid);
+                
+                PlaceObject(gridObjectSO, placementPosition, newParent);
                 SyncParentObject(buildingGrid);
-                PlaceObject(objectIndex, placementPosition, newParent);
             }
             else
             {
                 //Position is passed locally for existing objects to reduce chance of error.
                 Vector3 globalPosition = parent.TransformPoint(placementPosition);
-                PlaceObject(objectIndex, globalPosition, parent);
+                PlaceObject(gridObjectSO, globalPosition, parent);
             }
         }
 
@@ -110,17 +115,15 @@ namespace Namestation.Player
             buildingGrid.TryAssignValues();
         }
 
-        private void PlaceObject(int objectIndex, Vector3 position, Transform parent)
+        private void PlaceObject(GridObjectSO gridObjectSO, Vector3 position, Transform parent)
         {
-            Debug.Log(objectIndex + " " + position + " " + parent);
+            Debug.Log(gridObjectSO.name + " " + gridObjectSO.type + " " + position + " " + parent);
         
-            Debug.Log("hmm");
-            GameObject prefab = BuildableCollection.instance.buildables[objectIndex];
+            GameObject prefab = ResourceManager.GetGridPrefab(gridObjectSO.type.ToString());
             GameObject newObjectInstance = Instantiate(prefab, position, parent.rotation);
-            
             NetworkServer.Spawn(newObjectInstance);
+
             GridObject gridObject = newObjectInstance.GetComponent<GridObject>();
-            gridObject.gameObject.name = gridObject.gridObjectSO.name;
             SaveSubObject(gridObject, parent.gameObject, position);
         }
 
@@ -129,6 +132,7 @@ namespace Namestation.Player
             Vector2 localPosition = parent.transform.InverseTransformPoint(placementPosition);
             Vector2Int localPositionInt = new Vector2Int(Mathf.RoundToInt(localPosition.x), Mathf.RoundToInt(localPosition.y));
 
+            gridObject.gridName = gridObject.gridObjectSO.name;
             gridObject.position = localPositionInt;
             gridObject.currentHealth = gridObject.gridObjectSO.health;
             gridObject.currentParent = parent.transform;

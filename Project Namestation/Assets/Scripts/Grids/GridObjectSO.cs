@@ -6,14 +6,13 @@ namespace Namestation.Grids
     [CreateAssetMenu(menuName = "Namestation/GridObject")]
     public class GridObjectSO : ScriptableObject
     {
-        public string gridObjectName;
         public float health;
         public int spriteIndex;
         public ObjectType type;
 
         public override string ToString()
         {
-            return gridObjectName;
+            return name;
         }
     }
 

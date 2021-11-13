@@ -4,7 +4,7 @@ using Mirror;
 
 public class PlayerComponent : NetworkBehaviour
 {
-    public PlayerManager playerManager;
+    [HideInInspector] public PlayerManager playerManager;
     protected bool initialized = false;
 
     public virtual void Initialize()

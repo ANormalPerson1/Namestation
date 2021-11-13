@@ -20,6 +20,7 @@ namespace Namestation.Grids
 
         public void TryAssignValues()
         {
+            Debug.Log(gridName);
             if (gridName != null) gameObject.name = gridName;
         }
 
