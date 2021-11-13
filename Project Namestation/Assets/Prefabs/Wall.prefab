@@ -151,9 +151,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3864c55a002da2243a1a8a0f23b22a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0
+  gridName: Wall
   gridObjectSO: {fileID: 11400000, guid: 7dff827ffac06c64db7c018325c2c87a, type: 2}
   position: {x: 0, y: 0}
   currentHealth: 0
+  currentParent: {fileID: 0}
 --- !u!114 &-914085290438490813
 MonoBehaviour:
   m_ObjectHideFlags: 0

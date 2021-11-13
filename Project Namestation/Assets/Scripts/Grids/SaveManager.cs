@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Namestation.Grids;
+using Mirror;
 
 namespace Namestation.SaveSystem
 {
@@ -23,22 +24,30 @@ namespace Namestation.SaveSystem
         {
             BuildingGridWrapper buildingGridWrapper = JsonUtility.FromJson<BuildingGridWrapper>(jsonString);
             List<SerializableBuildingGrid> serializableBuildingGrids = buildingGridWrapper.serializableBuildingGrids;
-            
+
             //Delete existing or something?
             buildingGrids.Clear();
 
-            foreach(SerializableBuildingGrid serializableBuildingGrid in serializableBuildingGrids)
+            foreach (SerializableBuildingGrid serializableBuildingGrid in serializableBuildingGrids)
             {
+                //Check if object with transform id exists!
                 BuildingGrid buildingGrid = new BuildingGrid(serializableBuildingGrid.netID);
+                //if(T)
+
                 //Link/add componment to corresponding transform
-                foreach(SerializableGridObject serializableGridObject in serializableBuildingGrid.gridObjectWrapper.serializableGridObjects)
+                foreach (SerializableGridObject serializableGridObject in serializableBuildingGrid.gridObjectWrapper.serializableGridObjects)
                 {
-                    GridObject gridObject = new GridObject(serializableGridObject.gridObjectSO, serializableGridObject.position, serializableGridObject.currentHealth);
+                    GridObject gridObject = new GridObject
+                        (serializableGridObject.gridObjectSO,
+                        serializableGridObject.position,
+                        serializableGridObject.currentHealth,
+                        serializableGridObject.currentParent);
                     buildingGrid.gridObjects.Add(gridObject);
+                    //if(clien)
                     //Instantiate grid object
                 }
             }
-           
+
         }
 
         public static void Save()
@@ -57,7 +66,5 @@ namespace Namestation.SaveSystem
             Load();
         }
     }
-
-
 }
 

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Namestation.Grids;
 
 namespace Namestation.Interactables
 {

@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 using System;
-using System.Text;
-using Mirror;
 
 namespace Namestation.Grids
 {
@@ -20,7 +17,7 @@ namespace Namestation.Grids
             this.netID = netID;
         }
 
-        public SerializableBuildingGrid GetSeriarizableBuildingGrid ()
+        public SerializableBuildingGrid GetSeriarizableBuildingGrid()
         {
             return new SerializableBuildingGrid(this);
         }
@@ -32,7 +29,7 @@ namespace Namestation.Grids
         public int netID;
         public GridObjectWrapper gridObjectWrapper;
 
-        public SerializableBuildingGrid (BuildingGrid buildingGrid)
+        public SerializableBuildingGrid(BuildingGrid buildingGrid)
         {
             netID = buildingGrid.netID;
             gridObjectWrapper = new GridObjectWrapper(buildingGrid.gridObjects);
@@ -44,14 +41,14 @@ namespace Namestation.Grids
     {
         public List<SerializableBuildingGrid> serializableBuildingGrids;
 
-        public BuildingGridWrapper (List<BuildingGrid> buildingGrids)
+        public BuildingGridWrapper(List<BuildingGrid> buildingGrids)
         {
             List<SerializableBuildingGrid> serializableBuildingGrids = new List<SerializableBuildingGrid>();
             foreach (BuildingGrid buildingGrid in buildingGrids)
             {
                 serializableBuildingGrids.Add(buildingGrid.GetSeriarizableBuildingGrid());
             }
-             
+
             this.serializableBuildingGrids = serializableBuildingGrids;
         }
     }

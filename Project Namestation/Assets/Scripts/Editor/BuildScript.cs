@@ -50,7 +50,6 @@ public class BuildScript
         buildPlayerOptions.locationPathName = "Builds/Windows/Client/Client.exe";
         buildPlayerOptions.target = BuildTarget.StandaloneWindows64;
         buildPlayerOptions.options = BuildOptions.CompressWithLz4HC;
-
         Console.WriteLine("Building Client (Windows)...");
         BuildPipeline.BuildPlayer(buildPlayerOptions);
         Console.WriteLine("Built Client (Windows).");

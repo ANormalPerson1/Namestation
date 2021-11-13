@@ -91,7 +91,6 @@ namespace Namestation.Player
             {
                 Transform newParent = Instantiate(BuildableCollection.instance.buildables[2], placementPosition, Quaternion.identity).transform;
                 NetworkServer.Spawn(newParent.gameObject);
-                //Positions are synced via net components - do seperate system for round end save!
                 BuildingGrid buildingGrid = newParent.GetComponent<BuildingGrid>();
                 SaveManager.buildingGrids.Add(buildingGrid);
                 PlaceObject(objectIndex, placementPosition, newParent);
@@ -106,38 +105,44 @@ namespace Namestation.Player
 
         private void PlaceObject(int objectIndex, Vector3 position, Transform parent)
         {
+            Debug.Log(objectIndex + " " + position + " " + parent);
+        
+            Debug.Log("hmm");
             GameObject prefab = BuildableCollection.instance.buildables[objectIndex];
-
             GameObject newObjectInstance = Instantiate(prefab, position, parent.rotation);
+            
             NetworkServer.Spawn(newObjectInstance);
-
+            DebugClient(newObjectInstance);
             GridObject gridObject = newObjectInstance.GetComponent<GridObject>();
-            BuildingGrid buildingGrid = parent.GetComponent<BuildingGrid>();
-            buildingGrid.gridObjects.Add(gridObject);
-
-            AddSubObject(newObjectInstance, position, parent);
-            PlaceObjectClient(newObjectInstance, position, parent);
+            gridObject.gameObject.name = gridObject.gridObjectSO.name;
+            SaveSubObject(gridObject, parent.gameObject, position);
         }
 
         [ClientRpc]
-        private void PlaceObjectClient(GameObject newObject, Vector2 placementPosition, Transform parent)
+        void DebugClient(GameObject gameObject)
         {
-            AddSubObject(newObject, placementPosition, parent);
+            Debug.Log(gameObject);
         }
 
-        private void AddSubObject(GameObject newObject, Vector3 globalPosition, Transform parent)
+        private void SaveSubObject(GridObject gridObject, GameObject parent, Vector3 placementPosition)
         {
-            newObject.transform.parent = parent;
-        
-            GridObject gridObject = newObject.GetComponent<GridObject>();
-            newObject.name = gridObject.gridObjectSO.name;
+            Vector2 localPosition = parent.transform.InverseTransformPoint(placementPosition);
+            Vector2Int localPositionInt = new Vector2Int(Mathf.RoundToInt(localPosition.x), Mathf.RoundToInt(localPosition.y));
 
-            Vector2 localPosition = parent.InverseTransformPoint(globalPosition);
-            gridObject.position = new Vector2Int(Mathf.RoundToInt(localPosition.x), Mathf.RoundToInt(localPosition.y));;
-            gridObject.netID = (int)newObject.GetComponent<NetworkIdentity>().netId;
+            gridObject.position = localPositionInt;
             gridObject.currentHealth = gridObject.gridObjectSO.health;
+            gridObject.currentParent = parent.transform;
+            gridObject.transform.parent = parent.transform;
+            SyncSubObject(gridObject);
 
-            //Save everything (position, parent, health, ect.)
+            BuildingGrid buildingGrid = parent.GetComponent<BuildingGrid>();
+            buildingGrid.gridObjects.Add(gridObject);
+        }
+
+        [ClientRpc]
+        private void SyncSubObject(GridObject gridObject)
+        {
+            gridObject.TryAssignValues();
         }
 
         private Vector2? ConvertRawToLocalPlacementPosition(Vector2 mousePosition, Transform structureTransform)

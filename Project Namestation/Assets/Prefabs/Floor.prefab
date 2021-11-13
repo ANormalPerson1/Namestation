@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4270895829921875584}
   - component: {fileID: 4270895829921875586}
   - component: {fileID: 8803336036122414955}
-  - component: {fileID: 1667606708622850288}
-  - component: {fileID: 3858665931585955970}
+  - component: {fileID: 146642509019186286}
+  - component: {fileID: 3687015830650275217}
   m_Layer: 7
   m_Name: Floor
   m_TagString: Untagged
@@ -112,22 +112,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1667606708622850288
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4270895829921875585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3864c55a002da2243a1a8a0f23b22a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridObjectSO: {fileID: 11400000, guid: 7dff827ffac06c64db7c018325c2c87a, type: 2}
-  position: {x: 0, y: 0}
-  currentHealth: 0
---- !u!114 &3858665931585955970
+--- !u!114 &146642509019186286
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,3 +129,22 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 769bc30715ea21140b32ac2873a80525
   hasSpawned: 0
+--- !u!114 &3687015830650275217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4270895829921875585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3864c55a002da2243a1a8a0f23b22a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0
+  gridName: Floor
+  gridObjectSO: {fileID: 11400000, guid: 7dff827ffac06c64db7c018325c2c87a, type: 2}
+  position: {x: 0, y: 0}
+  currentHealth: 0
+  currentParent: {fileID: 0}
