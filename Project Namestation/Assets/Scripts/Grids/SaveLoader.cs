@@ -22,7 +22,6 @@ namespace Namestation.Saving
 
         private void Start()
         {
-            Debug.Log("cautious test");
             buildingGridPrefab = ResourceManager.GetGridPrefab("BuildingGrid");
             SaveManager.Load();
         }

@@ -117,8 +117,6 @@ namespace Namestation.Player
 
         private void PlaceObject(GridObjectSO gridObjectSO, Vector3 position, Transform parent)
         {
-            Debug.Log(gridObjectSO.name + " " + gridObjectSO.type + " " + position + " " + parent);
-        
             GameObject prefab = ResourceManager.GetGridPrefab(gridObjectSO.type.ToString());
             GameObject newObjectInstance = Instantiate(prefab, position, parent.rotation);
             NetworkServer.Spawn(newObjectInstance);
