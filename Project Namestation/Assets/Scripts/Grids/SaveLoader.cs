@@ -2,6 +2,8 @@ using Mirror;
 using UnityEngine;
 using Namestation.Interactables;
 using Namestation.Grids;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Namestation.Saving
 {
@@ -31,7 +33,7 @@ namespace Namestation.Saving
         {
             if (serializableBuildingGrid == null)
             {
-                Debug.Log("Warning! Null reference expection on loading building grid!");
+                Debug.LogError("Warning! Null reference expection on loading building grid!");
                 return null;
             }
 
@@ -48,48 +50,40 @@ namespace Namestation.Saving
             buildingGrid.gridName = serializableBuildingGrid.gridName;
             buildingGridObject.name = buildingGrid.gridName;
 
-            foreach (SerializableGridObject serializableGridObject in serializableBuildingGrid.gridObjectWrapper.serializableGridObjects)
+            List<string> gridObjectsJson = serializableBuildingGrid.gridObjectWrapper.gridObjectsJSON;
+            List<string> gridObjectNames = serializableBuildingGrid.gridObjectWrapper.gridObjectNames;
+            for(int i = 0; i < gridObjectsJson.Count; i++)
             {
-                GridObject gridObject = LoadGridObject(serializableGridObject, buildingGridObject.transform);
-                buildingGrid.gridObjects.Add(gridObject);
+                string currentObjectName = gridObjectNames[i];
+                string currentGridObject = gridObjectsJson[i];
+
+                GridObject loadedObject = LoadGridObject(currentObjectName, currentGridObject, buildingGridObject.transform);
+                buildingGrid.gridObjects.Add(loadedObject);
             }
 
             return buildingGrid;
         }
 
-        public GridObject LoadGridObject(SerializableGridObject serializableGridObject, Transform parent)
+        public GridObject LoadGridObject(string gridObjectName, string gridObjectJSON, Transform parent)
         {
-            if (serializableGridObject == null)
+            GameObject prefab = ResourceManager.GetGridPrefab(gridObjectName);
+            if (prefab == null)
             {
-                Debug.Log("Warning! Null reference expection on loading grid object!");
-                return null;
+                Debug.LogError("Warning! Null reference expection on loading grid object prefab!");
             }
 
-            string scriptableObjectName = serializableGridObject.scriptableObjectName;
-            GridObjectSO gridObjectSO = ResourceManager.GetGridObjectSO(scriptableObjectName);
-            if (gridObjectSO == null)
-            {
-                Debug.Log("Warning! Null reference expection on loading grid object scriptable object!");
-                return null;
-            }
-
-            string gridName = serializableGridObject.scriptableObjectName;
-            float currentHealth = serializableGridObject.currentHealth;
-
-            Vector2Int localPosition = serializableGridObject.position;
-
-            //Get by name dependent on a variable! Change this to enum!
-            GameObject prefab = ResourceManager.GetGridPrefab(gridObjectSO.type.ToString());
             GameObject gridObjectGO = Instantiate(prefab, Vector3.zero, parent.rotation, parent);
             NetworkServer.Spawn(gridObjectGO);
-            gridObjectGO.transform.localPosition = new Vector2(localPosition.x, localPosition.y);
-         
             GridObject gridObject = gridObjectGO.GetComponent<GridObject>();
-            gridObject.gridName = gridName;
-            gridObject.gridObjectSO = gridObjectSO;
-            gridObject.currentHealth = currentHealth;
-            gridObject.currentParent = parent;
-            gridObject.position = localPosition;
+            JsonUtility.FromJsonOverwrite(gridObjectJSON, gridObject);
+            if (gridObject == null)
+            {
+                Debug.LogError("Warning! Null reference expection on spawning grid objecvt!");
+                return null;
+            }
+
+            Vector2 localPosition = new Vector2(gridObject.position.x, gridObject.position.y);
+            gridObjectGO.transform.localPosition = localPosition;
 
             return gridObject;
         }

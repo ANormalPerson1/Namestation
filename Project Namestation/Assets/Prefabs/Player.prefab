@@ -156,7 +156,7 @@ MonoBehaviour:
   floorLayerMask:
     serializedVersion: 2
     m_Bits: 128
-  currentlyBuildingObject: {fileID: 11400000, guid: 7dff827ffac06c64db7c018325c2c87a, type: 2}
+  currentlyBuildingPrefab: {fileID: 4270895829921875585, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 256

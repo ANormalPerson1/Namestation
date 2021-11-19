@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 4270895829921875586}
   - component: {fileID: 9065099986314657861}
   - component: {fileID: 4268903164798134638}
-  - component: {fileID: 834510902379604505}
   - component: {fileID: -914085290438490813}
+  - component: {fileID: 6610724641579617078}
   m_Layer: 8
   m_Name: Wall
   m_TagString: Untagged
@@ -138,26 +138,7 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 81154
---- !u!114 &834510902379604505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4270895829921875585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3864c55a002da2243a1a8a0f23b22a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0
-  gridName: Wall
-  gridObjectSO: {fileID: 11400000, guid: 7dff827ffac06c64db7c018325c2c87a, type: 2}
-  position: {x: 0, y: 0}
-  currentHealth: 0
-  currentParent: {fileID: 0}
+  m_InstanceId: 25766
 --- !u!114 &-914085290438490813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,3 +156,22 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 2444a5204e2edec4ab7a9d4f3ff737f7
   hasSpawned: 0
+--- !u!114 &6610724641579617078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4270895829921875585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3864c55a002da2243a1a8a0f23b22a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  gridName: Wall
+  gridObjectSO: {fileID: 11400000, guid: 7dff827ffac06c64db7c018325c2c87a, type: 2}
+  position: {x: 0, y: 0}
+  currentHealth: 0
+  currentParent: {fileID: 0}

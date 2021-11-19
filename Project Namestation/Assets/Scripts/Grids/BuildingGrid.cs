@@ -18,7 +18,7 @@ namespace Namestation.Grids
             TryAssignValues();
         }
 
-        public void TryAssignValues()
+        public void TryAssignValues() //Basically syncvar, but for gameobject parent, position and name
         {
             if (gridName != null) gameObject.name = gridName;
         }
@@ -30,7 +30,6 @@ namespace Namestation.Grids
             Vector3 gridVelocity = rigidBody2D.velocity;
             Vector3 gridPosition = transform.position;
             Quaternion gridRotation = transform.rotation;
-
             return new SerializableBuildingGrid(this, gridVelocity, gridPosition, gridRotation);
         }
     }
@@ -64,7 +63,6 @@ namespace Namestation.Grids
             List<SerializableBuildingGrid> serializableBuildingGrids = new List<SerializableBuildingGrid>();
             foreach (BuildingGrid buildingGrid in buildingGrids)
             {
-                Debug.Log(buildingGrid.name);
                 serializableBuildingGrids.Add(buildingGrid.GetSeriarizableBuildingGrid());
             }
 

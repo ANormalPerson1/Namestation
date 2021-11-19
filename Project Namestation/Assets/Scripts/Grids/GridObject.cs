@@ -4,22 +4,21 @@ using System.Collections.Generic;
 using Mirror;
 namespace Namestation.Grids
 {
+    [Serializable]
     public class GridObject : NetworkBehaviour
     {
         [SyncVar] public string gridName;
-        [SyncVar] public GridObjectSO gridObjectSO;
-        [SyncVar] public Vector2Int position;
-        [HideInInspector, SyncVar] public float currentHealth;
-        [HideInInspector, SyncVar] public Transform currentParent;
-
-        
+        [SyncVar] public float currentHealth;
+        [SyncVar, HideInInspector] public Vector2Int position;
+        [SyncVar, HideInInspector, NonSerialized] public Transform currentParent;
+        [SyncVar] public ObjectType type;
 
         private void Start()
         {
             TryAssignValues();
         }
 
-        public void TryAssignValues()
+        public void TryAssignValues() //Basically syncvar, but for gameobject parent, position and name
         {
             if(currentParent != null)
             {
@@ -28,55 +27,30 @@ namespace Namestation.Grids
                 transform.localPosition = new Vector2(position.x, position.y);
             }
         }
-
-        public GridObject()
-        {
-
-        }
-
-        public GridObject(GridObjectSO gridObjectSO, Vector2Int position, float health, Transform parent)
-        {
-            this.gridObjectSO = gridObjectSO;
-            this.position = position;
-            currentHealth = health;
-            currentParent = parent;
-        }
-
-        public SerializableGridObject GetSerializableGridObject()
-        {
-            return new SerializableGridObject(this);
-        }
     }
 
-    [Serializable]
-    public class SerializableGridObject
+    public enum ObjectType
     {
-        public string scriptableObjectName;
-        [HideInInspector] public Vector2Int position;
-        [HideInInspector] public float currentHealth;
-
-        public SerializableGridObject(GridObject gridObject)
-        {
-            scriptableObjectName = gridObject.gridObjectSO.name;
-            position = gridObject.position;
-            currentHealth = gridObject.currentHealth;
-        }
+        Wall,
+        Underfloor,
+        Wire,
+        Pipe,
+        Floor
     }
 
     [Serializable]
     public class GridObjectWrapper
     {
-        public List<SerializableGridObject> serializableGridObjects;
+        public List<string> gridObjectNames = new List<string>();
+        public List<string> gridObjectsJSON = new List<string>();
 
         public GridObjectWrapper(List<GridObject> gridObjects)
         {
-            List<SerializableGridObject> serializableGridObjects = new List<SerializableGridObject>();
-            foreach (GridObject gridObject in gridObjects)
+            foreach(GridObject gridObject in gridObjects)
             {
-                serializableGridObjects.Add(gridObject.GetSerializableGridObject());
+                gridObjectsJSON.Add(JsonUtility.ToJson(gridObject));
+                gridObjectNames.Add(gridObject.gridName);
             }
-
-            this.serializableGridObjects = serializableGridObjects;
         }
     }
 }
