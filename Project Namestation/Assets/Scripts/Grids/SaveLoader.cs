@@ -82,8 +82,9 @@ namespace Namestation.Saving
                 return null;
             }
 
-            Vector2 localPosition = new Vector2(gridObject.position.x, gridObject.position.y);
-            gridObjectGO.transform.localPosition = localPosition;
+            gridObject.currentParent = parent;
+            gridObject.TryAssignValues();
+            
 
             return gridObject;
         }

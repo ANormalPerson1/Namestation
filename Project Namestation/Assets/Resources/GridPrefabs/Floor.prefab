@@ -127,10 +127,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   gridName: Floor
-  gridObjectSO: {fileID: 11400000, guid: 7dff827ffac06c64db7c018325c2c87a, type: 2}
+  currentHealth: 100
   position: {x: 0, y: 0}
-  currentHealth: 0
-  currentParent: {fileID: 0}
+  type: 4
 --- !u!114 &146642509019186286
 MonoBehaviour:
   m_ObjectHideFlags: 0

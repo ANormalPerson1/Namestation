@@ -131,6 +131,7 @@ namespace Namestation.Player
 
             gridObject.position = localPositionInt;
             gridObject.currentParent = parent.transform;
+            Debug.Log(gridObject.currentParent);
             gridObject.transform.parent = parent.transform;
             SyncSubObject(gridObject);
 
