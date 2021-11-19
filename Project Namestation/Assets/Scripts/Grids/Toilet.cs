@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Namestation.Grids
 {
     [Serializable]
-    public class Toilet : GridObject
+    public class Toilet : TileObject
     {
         [SyncVar] public float pissAmount;
     }

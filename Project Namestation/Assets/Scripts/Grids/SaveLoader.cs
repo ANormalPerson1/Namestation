@@ -50,43 +50,43 @@ namespace Namestation.Saving
             buildingGrid.gridName = serializableBuildingGrid.gridName;
             buildingGridObject.name = buildingGrid.gridName;
 
-            List<string> gridObjectsJson = serializableBuildingGrid.gridObjectWrapper.gridObjectsJSON;
-            List<string> gridObjectNames = serializableBuildingGrid.gridObjectWrapper.gridObjectNames;
-            for(int i = 0; i < gridObjectsJson.Count; i++)
+            List<string> tileObjectsJSON = serializableBuildingGrid.tileObjectWrapper.tileObjectsJSON;
+            List<string> tileObjectNames = serializableBuildingGrid.tileObjectWrapper.tileObjectNames;
+            for(int i = 0; i < tileObjectsJSON.Count; i++)
             {
-                string currentObjectName = gridObjectNames[i];
-                string currentGridObject = gridObjectsJson[i];
+                string currentObjectName = tileObjectNames[i];
+                string currentTileObject = tileObjectsJSON[i];
 
-                GridObject loadedObject = LoadGridObject(currentObjectName, currentGridObject, buildingGridObject.transform);
-                buildingGrid.gridObjects.Add(loadedObject);
+                TileObject loadedObject = LoadTileObject(currentObjectName, currentTileObject, buildingGridObject.transform);
+                buildingGrid.tileObjects.Add(loadedObject);
             }
 
             return buildingGrid;
         }
 
-        public GridObject LoadGridObject(string gridObjectName, string gridObjectJSON, Transform parent)
+        public TileObject LoadTileObject(string tileObjectName, string tileObjectJSON, Transform parent)
         {
-            GameObject prefab = ResourceManager.GetGridPrefab(gridObjectName);
+            GameObject prefab = ResourceManager.GetGridPrefab(tileObjectName);
             if (prefab == null)
             {
                 Debug.LogError("Warning! Null reference expection on loading grid object prefab!");
             }
 
-            GameObject gridObjectGO = Instantiate(prefab, Vector3.zero, parent.rotation, parent);
-            NetworkServer.Spawn(gridObjectGO);
-            GridObject gridObject = gridObjectGO.GetComponent<GridObject>();
-            JsonUtility.FromJsonOverwrite(gridObjectJSON, gridObject);
-            if (gridObject == null)
+            GameObject tileObjectGO = Instantiate(prefab, Vector3.zero, parent.rotation, parent);
+            NetworkServer.Spawn(tileObjectGO);
+            TileObject tileObject = tileObjectGO.GetComponent<TileObject>();
+            JsonUtility.FromJsonOverwrite(tileObjectJSON, tileObject);
+            if (tileObject == null)
             {
                 Debug.LogError("Warning! Null reference expection on spawning grid objecvt!");
                 return null;
             }
 
-            gridObject.currentParent = parent;
-            gridObject.TryAssignValues();
+            tileObject.currentParent = parent;
+            tileObject.TryAssignValues();
             
 
-            return gridObject;
+            return tileObject;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Namestation.Grids
     public class BuildingGrid : NetworkBehaviour
     {
         [SyncVar] public string gridName;
-        [HideInInspector] public List<GridObject> gridObjects;
+        [SyncVar, HideInInspector] public List<Tile> tiles;
 
         private void Start()
         {
@@ -41,7 +41,7 @@ namespace Namestation.Grids
         public Vector2 gridVelocity;
         public Vector2 gridPosition;
         public Quaternion gridRotation;
-        public GridObjectWrapper gridObjectWrapper;
+        public TileWrapper tileWrapper;
 
         public SerializableBuildingGrid(BuildingGrid buildingGrid, Vector2 velocity, Vector2 position, Quaternion rotation)
         {
@@ -49,7 +49,7 @@ namespace Namestation.Grids
             gridVelocity = velocity;
             gridPosition = position;
             gridRotation = rotation;
-            gridObjectWrapper = new GridObjectWrapper(buildingGrid.gridObjects);
+            tileWrapper = new TileWrapper(buildingGrid.tiles);
         }
     }
 

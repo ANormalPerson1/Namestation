@@ -18,6 +18,7 @@ namespace Namestation.Player
         [SerializeField] LayerMask entityLayerMask;
 
         GameObject buildingGridPrefab;
+        GameObject tilePrefab;
 
         InputManager inputManager;
 
@@ -26,6 +27,7 @@ namespace Namestation.Player
             base.Initialize();
             inputManager = playerManager.inputManager;
             buildingGridPrefab = ResourceManager.GetGridPrefab("BuildingGrid");
+            tilePrefab = ResourceManager.GetGridPrefab("Tile");
         }
 
         private void Update()
@@ -69,80 +71,59 @@ namespace Namestation.Player
 
         private void PlaceObjectAsNewStructure(Vector2 mousePosition)
         {
-            PlaceObjectServer(currentlyBuildingPrefab.name, mousePosition, null);
+            PlaceObjectServer(currentlyBuildingPrefab.name, mousePosition, null, null);
         }
 
-        private void PlaceObjectAddToExistingStructure(Vector2 mousePosition, Collider2D existingStructure)
+        private void PlaceObjectAddToExistingStructure(Vector2 mousePosition, Collider2D existingTileObject)
         {
-            Transform structureTransform = existingStructure.transform;
-            Vector2? localPlacementPosition = ConvertRawToLocalPlacementPosition(mousePosition, structureTransform);
+            Transform tileObjectTransform = existingTileObject.transform;
+            Vector2? localPlacementPosition = ConvertRawToLocalPlacementPosition(mousePosition, tileObjectTransform);
             if (localPlacementPosition == null) return;
-            Vector2 globalPlacementPosition = structureTransform.TransformPoint(localPlacementPosition.Value);
+            Vector2 globalPlacementPosition = tileObjectTransform.TransformPoint(localPlacementPosition.Value);
 
-            if (GridClear(globalPlacementPosition, structureTransform.rotation))
+            if (GridClear(globalPlacementPosition, tileObjectTransform.rotation))
             {
-                Debug.Log(structureTransform.parent);
-                Vector2 localPositionRelativeToParent = structureTransform.parent.InverseTransformPoint(globalPlacementPosition);
-                PlaceObjectServer(currentlyBuildingPrefab.name, localPositionRelativeToParent, structureTransform.parent);
+                Vector2 localPositionRelativeToParent = tileObjectTransform.parent.InverseTransformPoint(globalPlacementPosition);
+                Transform currentTileTransform = tileObjectTransform.parent;
+                Transform currentGridTransform = currentTileTransform.parent;
+                PlaceObjectServer(currentlyBuildingPrefab.name, localPositionRelativeToParent, currentTileTransform);
             }
         }
 
         [Command]
-        private void PlaceObjectServer(string gridObjectPrefabString, Vector2 placementPosition, Transform parent)
+        private void PlaceObjectServer(string tileObjectPrefabString, Vector2 placementPosition, Transform parentGridTransform, Transform parentTileTransform)
         {
-            GameObject prefab  = ResourceManager.GetGridPrefab(gridObjectPrefabString);
-            if (parent == null)
+            GameObject prefab  = ResourceManager.GetGridPrefab(tileObjectPrefabString);
+
+            if (parentGridTransform == null)
             {
-                Transform newParent = Instantiate(buildingGridPrefab, placementPosition, Quaternion.identity).transform;
-                NetworkServer.Spawn(newParent.gameObject);
-                BuildingGrid buildingGrid = newParent.GetComponent<BuildingGrid>();
-                SaveManager.buildingGrids.Add(buildingGrid);
-                
-                PlaceObject(prefab, placementPosition, newParent);
-                SyncParentObject(buildingGrid);
+                //Position is passed globally, as there are no local references
+                //Create new building grid and tile
+                BuildingGrid buildingGrid = CreateBuildingGridServer(placementPosition, Quaternion.identity, Vector3.zero);
+                Vector2 localPlacementPosition = buildingGrid.transform.InverseTransformPoint(placementPosition);
+
+                Tile tile = CreateTileServer(buildingGrid, localPlacementPosition);
+                CreateTileObjectServer(prefab, tile);
             }
             else
             {
                 //Position is passed locally for existing objects to reduce chance of error.
-                Vector3 globalPosition = parent.TransformPoint(placementPosition);
-                PlaceObject(prefab, globalPosition, parent);
+                //Add to existing object
+                BuildingGrid buildingGrid = parentGridTransform.GetComponent<BuildingGrid>();
+                Vector2 localPlacementPosition = placementPosition;
+
+                Tile tile;
+                if (parentTileTransform == null)
+                {
+                    tile = CreateTileServer(buildingGrid, localPlacementPosition);
+                }
+                else
+                {
+                    tile = parentTileTransform.GetComponent<Tile>();
+                }
+
+                CreateTileObjectServer(prefab, tile);
             }
-        }
-
-        [ClientRpc]
-        private void SyncParentObject(BuildingGrid buildingGrid)
-        {
-            buildingGrid.TryAssignValues();
-        }
-
-        private void PlaceObject(GameObject prefab, Vector3 position, Transform parent)
-        {
-            GameObject gridObjectGO = Instantiate(prefab, position, parent.rotation);
-            NetworkServer.Spawn(gridObjectGO);
-            GridObject gridObject = gridObjectGO.GetComponent<GridObject>();
-        
-            SaveSubObject(gridObject, parent.gameObject, position);
-        }
-
-        private void SaveSubObject(GridObject gridObject, GameObject parent, Vector3 placementPosition)
-        {
-            Vector2 localPosition = parent.transform.InverseTransformPoint(placementPosition);
-            Vector2Int localPositionInt = new Vector2Int(Mathf.RoundToInt(localPosition.x), Mathf.RoundToInt(localPosition.y));
-
-            gridObject.position = localPositionInt;
-            gridObject.currentParent = parent.transform;
-            Debug.Log(gridObject.currentParent);
-            gridObject.transform.parent = parent.transform;
-            SyncSubObject(gridObject);
-
-            BuildingGrid buildingGrid = parent.GetComponent<BuildingGrid>();
-            buildingGrid.gridObjects.Add(gridObject);
-        }
-
-        [ClientRpc]
-        private void SyncSubObject(GridObject gridObject)
-        {
-            gridObject.TryAssignValues();
         }
 
         private Vector2? ConvertRawToLocalPlacementPosition(Vector2 mousePosition, Transform structureTransform)
