@@ -38,8 +38,7 @@ namespace Namestation.Saving
 
             foreach (SerializableBuildingGrid serializableBuildingGrid in serializableBuildingGrids)
             {
-                BuildingGrid buildingGrid = SaveLoader.instance.LoadBuildingGrid(serializableBuildingGrid);
-                buildingGrids.Add(buildingGrid);
+                SaveLoader.instance.LoadBuildingGrid(serializableBuildingGrid);
             }
 
             Debug.Log("Game loaded!");

@@ -6,7 +6,6 @@ using Mirror;
 
 namespace Namestation.Grids
 {
-    [Serializable]
     public class Tile : NetworkBehaviour
     {
         [SyncVar, HideInInspector] public Vector2Int position;
@@ -27,6 +26,11 @@ namespace Namestation.Grids
             }
         }
 
+        public SerializableTile GetSerializableTile ()
+        {
+            return new SerializableTile(this);
+        }
+
         public bool HasPlacedLayer(Layer layer)
         {
             foreach(TileObject tileObject in tileObjects)
@@ -41,15 +45,35 @@ namespace Namestation.Grids
     }
 
     [Serializable]
+    public class SerializableTile
+    {
+        public Vector2Int position;
+        public Transform currentParent;
+        public List<string> tileObjectNames = new List<string>();
+        public List<string> tileObjectsJSON = new List<string>();
+
+        public SerializableTile (Tile tile)
+        {
+            position = tile.position;
+            currentParent = tile.currentParent;
+            foreach(TileObject tileObject in tile.tileObjects)
+            {
+                tileObjectNames.Add(tileObject.tileName);
+                tileObjectsJSON.Add(JsonUtility.ToJson(tileObjectsJSON));
+            }
+        }
+    }
+
+    [Serializable]
     public class TileWrapper
     {
-        public List<Tile> tiles;
+        public List<SerializableTile> serializableTiles;
 
         public TileWrapper(List<Tile> tiles)
         {
             foreach (Tile tile in tiles)
             {
-                this.tiles.Add(tile);
+                serializableTiles.Add(tile.GetSerializableTile());
             }
         }
     }

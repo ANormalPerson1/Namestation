@@ -1,11 +1,24 @@
 using UnityEngine;
 using Mirror;
 using Namestation.Saving;
+using Namestation.Grids;
 
 namespace Namestation.Grids
 {
+    //Server only class!
     public class BuildingManager : MonoBehaviour
     {
+        public static BuildingManager instance;
+        private void Awake()
+        {
+            if(instance != null)
+            {
+                Debug.LogError("More than 1 instance of BuildingManager found!");
+                return;
+            }
+            instance = this;
+        }
+
         public GameObject buildingGridPrefab;
         public GameObject tilePrefab;
 
@@ -51,13 +64,17 @@ namespace Namestation.Grids
             tile.TryAssignValues();
         }
 
-        public void CreateTileObjectServer(GameObject prefab, Tile tile)
+        public void CreateTileObjectServer(GameObject prefab, Tile tile, string jsonOverride = null)
         {
             GameObject newTileGameObject = Instantiate(prefab, Vector3.zero, tile.transform.rotation);
             NetworkServer.Spawn(newTileGameObject);
             TileObject newTileObject = newTileGameObject.GetComponent<TileObject>();
             tile.tileObjects.Add(newTileObject);
             //Check if syncvar works for tileobjects!
+            if(jsonOverride != null)
+            {
+                JsonUtility.FromJsonOverwrite(jsonOverride, newTileObject);
+            } 
 
             newTileObject.currentParent = tile.transform;
 

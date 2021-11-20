@@ -94,16 +94,17 @@ namespace Namestation.Player
         private void PlaceObjectServer(string tileObjectPrefabString, Vector2 placementPosition, Transform parentGridTransform, Transform parentTileTransform)
         {
             GameObject prefab  = ResourceManager.GetGridPrefab(tileObjectPrefabString);
+            BuildingManager serverBuildingManager = BuildingManager.instance;
 
             if (parentGridTransform == null)
             {
                 //Position is passed globally, as there are no local references
                 //Create new building grid and tile
-                BuildingGrid buildingGrid = CreateBuildingGridServer(placementPosition, Quaternion.identity, Vector3.zero);
+                BuildingGrid buildingGrid = serverBuildingManager.CreateBuildingGridServer(placementPosition, Quaternion.identity, Vector3.zero);
                 Vector2 localPlacementPosition = buildingGrid.transform.InverseTransformPoint(placementPosition);
 
-                Tile tile = CreateTileServer(buildingGrid, localPlacementPosition);
-                CreateTileObjectServer(prefab, tile);
+                Tile tile = serverBuildingManager.CreateTileServer(buildingGrid, localPlacementPosition);
+                serverBuildingManager. CreateTileObjectServer(prefab, tile);
             }
             else
             {
@@ -115,14 +116,14 @@ namespace Namestation.Player
                 Tile tile;
                 if (parentTileTransform == null)
                 {
-                    tile = CreateTileServer(buildingGrid, localPlacementPosition);
+                    tile = serverBuildingManager.CreateTileServer(buildingGrid, localPlacementPosition);
                 }
                 else
                 {
                     tile = parentTileTransform.GetComponent<Tile>();
                 }
 
-                CreateTileObjectServer(prefab, tile);
+                serverBuildingManager.CreateTileObjectServer(prefab, tile);
             }
         }
 
