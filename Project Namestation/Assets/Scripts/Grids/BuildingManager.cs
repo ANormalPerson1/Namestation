@@ -27,14 +27,6 @@ namespace Namestation.Grids
         {
             buildingGridPrefab = ResourceManager.GetGridPrefab("BuildingGrid");
             tilePrefab = ResourceManager.GetGridPrefab("Tile");
-            ClientStart();
-        }
-
-        [ClientRpc]
-        private void ClientStart()
-        {
-            buildingGridPrefab = ResourceManager.GetGridPrefab("BuildingGrid");
-            tilePrefab = ResourceManager.GetGridPrefab("Tile");
         }
 
         public BuildingGrid CreateBuildingGridServer(Vector3 position, Quaternion rotation, Vector3 velocity)
