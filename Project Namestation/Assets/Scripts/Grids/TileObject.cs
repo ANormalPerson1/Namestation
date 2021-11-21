@@ -19,7 +19,7 @@ namespace Namestation.Grids
 
         public void TryAssignValues() //Basically syncvar, but for gameobject parent, position and name
         {
-            if(currentParent != null)
+            if(currentParent != null && transform.parent == null)
             {
                 transform.parent = currentParent;
                 transform.localPosition = Vector2.zero;
