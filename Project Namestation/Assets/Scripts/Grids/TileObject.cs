@@ -24,6 +24,7 @@ namespace Namestation.Grids
                 transform.parent = currentParent;
                 transform.localPosition = Vector2.zero;
                 gameObject.name = tileName;
+                currentParent.GetComponent<Tile>().tileObjects.Add(this);
             }
         }
     }

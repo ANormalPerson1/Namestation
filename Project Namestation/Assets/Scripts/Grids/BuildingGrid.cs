@@ -2,6 +2,7 @@ using UnityEngine;
 using Mirror;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace Namestation.Grids
 {
@@ -11,7 +12,7 @@ namespace Namestation.Grids
     public class BuildingGrid : NetworkBehaviour
     {
         [SyncVar] public string gridName;
-        [SyncVar, HideInInspector] public List<Tile> tiles;
+        public List<Tile> tiles = new List<Tile>();
 
         private void Start()
         {
@@ -20,7 +21,10 @@ namespace Namestation.Grids
 
         public void TryAssignValues() //Basically syncvar, but for gameobject parent, position and name
         {
-            if (gridName != null) gameObject.name = gridName;
+            if (gridName != null)
+            {
+                gameObject.name = gridName;
+            }
         }
 
         public SerializableBuildingGrid GetSeriarizableBuildingGrid()
@@ -49,7 +53,7 @@ namespace Namestation.Grids
             gridVelocity = velocity;
             gridPosition = position;
             gridRotation = rotation;
-            tileWrapper = new TileWrapper(buildingGrid.tiles);
+            tileWrapper = new TileWrapper(buildingGrid.tiles.ToList());
         }
     }
 

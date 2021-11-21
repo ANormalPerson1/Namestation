@@ -17,17 +17,12 @@ namespace Namestation.Player
         [SerializeField] LayerMask wallLayerMask;
         [SerializeField] LayerMask entityLayerMask;
 
-        GameObject buildingGridPrefab;
-        GameObject tilePrefab;
-
         InputManager inputManager;
 
         public override void Initialize()
         {
             base.Initialize();
             inputManager = playerManager.inputManager;
-            buildingGridPrefab = ResourceManager.GetGridPrefab("BuildingGrid");
-            tilePrefab = ResourceManager.GetGridPrefab("Tile");
         }
 
         private void Update()
@@ -74,21 +69,52 @@ namespace Namestation.Player
             PlaceObjectServer(currentlyBuildingPrefab.name, mousePosition, null, null);
         }
 
-        private void PlaceObjectAddToExistingStructure(Vector2 mousePosition, Collider2D existingTileObject)
+        private void PlaceObjectAddToExistingStructure(Vector2 mousePosition, Collider2D existingTileObjectCollider)
         {
-            Transform tileObjectTransform = existingTileObject.transform;
-            Vector2? localPlacementPosition = ConvertRawToLocalPlacementPosition(mousePosition, tileObjectTransform);
+            Transform existingTileObject = existingTileObjectCollider.transform;
+            Vector2? localPlacementPosition = ConvertRawToLocalPlacementPosition(mousePosition, existingTileObject);
             if (localPlacementPosition == null) return;
-            Vector2 globalPlacementPosition = tileObjectTransform.TransformPoint(localPlacementPosition.Value);
+            Vector2 globalPlacementPosition = existingTileObject.TransformPoint(localPlacementPosition.Value);
 
-            if (GridClear(globalPlacementPosition, tileObjectTransform.rotation))
+            if (GridClear(globalPlacementPosition, existingTileObject.rotation))
             {
-                Vector2 localPositionRelativeToParent = tileObjectTransform.parent.InverseTransformPoint(globalPlacementPosition);
-                Transform currentTileTransform = tileObjectTransform.parent;
-                Transform currentGridTransform = currentTileTransform.parent;
-                PlaceObjectServer(currentlyBuildingPrefab.name, localPositionRelativeToParent, currentTileTransform);
+                PlaceObjectAddAsNewTile(existingTileObject, globalPlacementPosition);
+            }
+            else
+            {
+                PlaceObjectAddToTile(existingTileObject);
             }
         }
+
+        private void PlaceObjectAddAsNewTile(Transform existingTileObject, Vector3 placementPosition)
+        {
+            Transform existingTile = existingTileObject.parent;
+            Transform existingGrid = existingTile.parent;
+            Vector2 localPlacementPosition = existingGrid.InverseTransformPoint(placementPosition);
+
+            PlaceObjectServer(currentlyBuildingPrefab.name, localPlacementPosition, existingGrid, null);
+        }
+
+        private void PlaceObjectAddToTile(Transform existingTileObject)
+        {
+            Transform existingTile = existingTileObject.parent;
+            Transform existingGrid = existingTile.parent;
+            Vector2 localPlacementPosition = Vector2.zero;
+
+            Tile tile = existingTile.GetComponent<Tile>();
+            TileObject tileObject = currentlyBuildingPrefab.GetComponent<TileObject>();
+
+            if(!tile.ContainsPlacedLayer(tileObject.layer))
+            {
+                Debug.Log("Placed object, added to existing!");
+                PlaceObjectServer(currentlyBuildingPrefab.name, localPlacementPosition, existingGrid, existingTile);
+            }
+            else
+            {
+                Debug.Log("Warning! Existing object contains tile layer!");
+            }
+        }
+
 
         [Command]
         private void PlaceObjectServer(string tileObjectPrefabString, Vector2 placementPosition, Transform parentGridTransform, Transform parentTileTransform)
@@ -175,7 +201,6 @@ namespace Namestation.Player
         {
             Vector3 quaternionEuler = rotation.eulerAngles;
             Collider2D[] colliders = Physics2D.OverlapBoxAll(position, Vector2.one * 0.95f, quaternionEuler.z);
-            Debug.Log(colliders.Length);
             return colliders.Length == 0f;
         }
     }

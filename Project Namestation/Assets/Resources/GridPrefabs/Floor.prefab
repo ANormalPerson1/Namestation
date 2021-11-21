@@ -126,10 +126,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
-  gridName: Floor
+  tileName: Floor
   currentHealth: 100
-  position: {x: 0, y: 0}
-  type: 4
+  layer: 2
 --- !u!114 &146642509019186286
 MonoBehaviour:
   m_ObjectHideFlags: 0

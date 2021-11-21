@@ -9,11 +9,11 @@ namespace Namestation.Grids
     public class Tile : NetworkBehaviour
     {
         [SyncVar, HideInInspector] public Vector2Int position;
-        [SyncVar, HideInInspector, NonSerialized] public Transform currentParent;
-        [SyncVar, HideInInspector] public List<TileObject> tileObjects;
+        [SyncVar, HideInInspector] public Transform currentParent;
+        public List<TileObject> tileObjects = new List<TileObject>();
 
         private void Start()
-        {
+        { 
             TryAssignValues();
         }
 
@@ -23,15 +23,18 @@ namespace Namestation.Grids
             {
                 transform.parent = currentParent;
                 transform.localPosition = new Vector2(position.x, position.y);
+
+                currentParent.GetComponent<BuildingGrid>().tiles.Add(this);
             }
         }
+
 
         public SerializableTile GetSerializableTile ()
         {
             return new SerializableTile(this);
         }
 
-        public bool HasPlacedLayer(Layer layer)
+        public bool ContainsPlacedLayer(Layer layer)
         {
             foreach(TileObject tileObject in tileObjects)
             {
@@ -48,18 +51,16 @@ namespace Namestation.Grids
     public class SerializableTile
     {
         public Vector2Int position;
-        public Transform currentParent;
         public List<string> tileObjectNames = new List<string>();
         public List<string> tileObjectsJSON = new List<string>();
 
         public SerializableTile (Tile tile)
         {
             position = tile.position;
-            currentParent = tile.currentParent;
             foreach(TileObject tileObject in tile.tileObjects)
             {
                 tileObjectNames.Add(tileObject.tileName);
-                tileObjectsJSON.Add(JsonUtility.ToJson(tileObjectsJSON));
+                tileObjectsJSON.Add(JsonUtility.ToJson(tileObject));
             }
         }
     }
@@ -67,7 +68,7 @@ namespace Namestation.Grids
     [Serializable]
     public class TileWrapper
     {
-        public List<SerializableTile> serializableTiles;
+        public List<SerializableTile> serializableTiles = new List<SerializableTile>();
 
         public TileWrapper(List<Tile> tiles)
         {
@@ -75,6 +76,7 @@ namespace Namestation.Grids
             {
                 serializableTiles.Add(tile.GetSerializableTile());
             }
+            Debug.Log(serializableTiles.Count);
         }
     }
 

@@ -6,8 +6,12 @@ using Namestation.Grids;
 namespace Namestation.Grids
 {
     //Server only class!
-    public class BuildingManager : MonoBehaviour
+    public class BuildingManager : NetworkBehaviour
     {
+        private GameObject buildingGridPrefab;
+        private GameObject tilePrefab;
+
+
         public static BuildingManager instance;
         private void Awake()
         {
@@ -19,19 +23,29 @@ namespace Namestation.Grids
             instance = this;
         }
 
-        public GameObject buildingGridPrefab;
-        public GameObject tilePrefab;
+        private void Start()
+        {
+            buildingGridPrefab = ResourceManager.GetGridPrefab("BuildingGrid");
+            tilePrefab = ResourceManager.GetGridPrefab("Tile");
+            ClientStart();
+        }
+
+        [ClientRpc]
+        private void ClientStart()
+        {
+            buildingGridPrefab = ResourceManager.GetGridPrefab("BuildingGrid");
+            tilePrefab = ResourceManager.GetGridPrefab("Tile");
+        }
 
         public BuildingGrid CreateBuildingGridServer(Vector3 position, Quaternion rotation, Vector3 velocity)
         {
             GameObject newGridGameObject = Instantiate(buildingGridPrefab, position, rotation);
-            Rigidbody rigidbody = newGridGameObject.GetComponent<Rigidbody>();
-            rigidbody.velocity = velocity;
+            Rigidbody2D rigidbody2D = newGridGameObject.GetComponent<Rigidbody2D>();
+            rigidbody2D.velocity = velocity;
 
             NetworkServer.Spawn(newGridGameObject.gameObject);
             BuildingGrid newGrid = newGridGameObject.GetComponent<BuildingGrid>();
             SaveManager.buildingGrids.Add(newGrid);
-
             newGrid.TryAssignValues();
             SyncBuildingGrid(newGrid);
             return newGrid;
@@ -48,7 +62,6 @@ namespace Namestation.Grids
             GameObject newTileGameObject = Instantiate(tilePrefab, Vector3.zero, parentBuildingGrid.transform.rotation);
             NetworkServer.Spawn(newTileGameObject);
             Tile newTile = newTileGameObject.GetComponent<Tile>();
-            parentBuildingGrid.tiles.Add(newTile);
 
             newTile.currentParent = parentBuildingGrid.transform;
             newTile.position = new Vector2Int(Mathf.RoundToInt(localPosition.x), Mathf.RoundToInt(localPosition.y));
@@ -69,7 +82,7 @@ namespace Namestation.Grids
             GameObject newTileGameObject = Instantiate(prefab, Vector3.zero, tile.transform.rotation);
             NetworkServer.Spawn(newTileGameObject);
             TileObject newTileObject = newTileGameObject.GetComponent<TileObject>();
-            tile.tileObjects.Add(newTileObject);
+
             //Check if syncvar works for tileobjects!
             if(jsonOverride != null)
             {
@@ -77,7 +90,7 @@ namespace Namestation.Grids
             } 
 
             newTileObject.currentParent = tile.transform;
-
+            newTileObject.tileName = newTileObject.name;
             newTileObject.TryAssignValues();
             SyncTileObject(newTileObject);
         }

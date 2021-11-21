@@ -105,8 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
-  gridName: Toilet
+  tileName: Toilet
   currentHealth: 100
-  position: {x: 0, y: 0}
-  type: 4
-  pissAmount: 0
+  layer: 5
+  pissAmount: 11
