@@ -1,7 +1,6 @@
 using UnityEngine;
 using Mirror;
 using Namestation.Saving;
-using Namestation.Grids;
 
 namespace Namestation.Grids
 {

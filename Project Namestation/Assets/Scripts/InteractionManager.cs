@@ -42,6 +42,7 @@ namespace Namestation.Player
         private void AttemptToPlaceObject()
         {
             Vector2 mousePosition = inputManager.mousePosition;
+
             Collider2D[] colliders = GetCollidersNearPlacementPoint(mousePosition);
             if(colliders.Length == 0)
             {
@@ -157,7 +158,7 @@ namespace Namestation.Player
         {
             //Convert the position to local space, check where to place relative to the object's local grid and reconvert into world space.
             Vector2 baseLocalPosition = structureTransform.InverseTransformPoint(mousePosition);
-            Vector2? localPlacementPosition = CalculateObjectLocalPlacementPosition(baseLocalPosition.normalized);
+            Vector2? localPlacementPosition = CalculateObjectLocalPlacementPosition(baseLocalPosition);
             if(localPlacementPosition != null)
             {
                 return localPlacementPosition;
@@ -167,6 +168,9 @@ namespace Namestation.Player
 
         private Vector2? CalculateObjectLocalPlacementPosition(Vector2 baseLocalPosition)
         {
+            //Place in same object if in same grid
+            if (Mathf.Abs(baseLocalPosition.x) < 0.5f && Mathf.Abs(baseLocalPosition.y) < 0.5f) return Vector2.zero;
+
             //If under 45 degree angle, do not place.
             if(Mathf.Abs(baseLocalPosition.x) >= 0.5f && Mathf.Abs(baseLocalPosition.y) >= 0.5f)
             {
