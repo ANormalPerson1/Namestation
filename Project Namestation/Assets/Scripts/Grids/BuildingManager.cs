@@ -90,7 +90,7 @@ namespace Namestation.Grids
             } 
 
             newTileObject.currentParent = tile.transform;
-            newTileObject.tileName = newTileObject.name;
+            newTileObject.tileName = prefab.name;
             newTileObject.TryAssignValues();
             SyncTileObject(newTileObject);
         }

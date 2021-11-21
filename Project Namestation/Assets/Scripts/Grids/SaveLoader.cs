@@ -1,10 +1,11 @@
 using UnityEngine;
 using Namestation.Grids;
 using System.Collections.Generic;
+using Mirror;
 
 namespace Namestation.Saving
 {
-    public class SaveLoader : MonoBehaviour
+    public class SaveLoader : NetworkBehaviour
     {
         GameObject buildingGridPrefab;
         [SerializeField] BuildingManager buildingManager;
@@ -22,6 +23,7 @@ namespace Namestation.Saving
 
         private void Start()
         {
+            if (!isServer) return;
             buildingGridPrefab = ResourceManager.GetGridPrefab("BuildingGrid");
             SaveManager.Load();
         }
