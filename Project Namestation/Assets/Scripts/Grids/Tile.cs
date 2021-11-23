@@ -76,7 +76,6 @@ namespace Namestation.Grids
             {
                 serializableTiles.Add(tile.GetSerializableTile());
             }
-            Debug.Log(serializableTiles.Count);
         }
     }
 
