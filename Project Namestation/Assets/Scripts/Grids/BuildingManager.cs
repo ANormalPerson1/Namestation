@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using Mirror;
 using Namestation.Saving;
 
@@ -90,6 +92,35 @@ namespace Namestation.Grids
         private void SyncTileObject(TileObject tileObject)
         {
             tileObject.TryAssignValues();
+            StartCoroutine(IE_PlayBuildAnimation(tileObject));
+        }
+
+        IEnumerator IE_PlayBuildAnimation(TileObject tileObject)
+        {
+            SpriteRenderer tileObjectRenderer = tileObject.GetComponent<SpriteRenderer>();
+            tileObjectRenderer.drawMode = SpriteDrawMode.Tiled;
+            float timePassed = 0f;
+            float duration = 0.2f;
+            while (timePassed < duration)
+            {
+                timePassed += Time.deltaTime;
+                float lerpAmount = (timePassed / duration) * 1.2f;
+                tileObjectRenderer.size = new Vector2(lerpAmount, lerpAmount);
+              yield return null;
+            }
+
+            timePassed = 0f;
+            float downscaleDuration = 0.1f;
+            while(timePassed < downscaleDuration)
+            {
+                timePassed += Time.deltaTime;
+                float lerpAmount = 1.2f - (timePassed / downscaleDuration) * 0.2f;
+                tileObjectRenderer.size = new Vector2(lerpAmount, lerpAmount);
+                yield return null;
+            }
+            tileObjectRenderer.size = new Vector2(1f, 1f);
+
+           yield return null;
         }
     }
 }
