@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using Namestation.Saving;
+using UnityEngine.Experimental.Rendering.Universal;
 
 namespace Namestation.Grids
 {
@@ -16,7 +17,7 @@ namespace Namestation.Grids
         public static BuildingManager instance;
         private void Awake()
         {
-            if(instance != null)
+            if (instance != null)
             {
                 Debug.LogError("More than 1 instance of BuildingManager found!");
                 return;
@@ -77,10 +78,10 @@ namespace Namestation.Grids
             TileObject newTileObject = newTileGameObject.GetComponent<TileObject>();
 
             //Check if syncvar works for tileobjects!
-            if(jsonOverride != null)
+            if (jsonOverride != null)
             {
                 JsonUtility.FromJsonOverwrite(jsonOverride, newTileObject);
-            } 
+            }
 
             newTileObject.currentParent = tile.transform;
             newTileObject.tileName = prefab.name;
@@ -98,7 +99,6 @@ namespace Namestation.Grids
         IEnumerator IE_PlayBuildAnimation(TileObject tileObject)
         {
             SpriteRenderer tileObjectRenderer = tileObject.GetComponent<SpriteRenderer>();
-            tileObjectRenderer.drawMode = SpriteDrawMode.Tiled;
             float timePassed = 0f;
             float duration = 0.2f;
             while (timePassed < duration)
@@ -106,12 +106,12 @@ namespace Namestation.Grids
                 timePassed += Time.deltaTime;
                 float lerpAmount = (timePassed / duration) * 1.1f;
                 tileObjectRenderer.size = new Vector2(lerpAmount, lerpAmount);
-              yield return null;
+                yield return null;
             }
 
             timePassed = 0f;
             float downscaleDuration = 0.1f;
-            while(timePassed < downscaleDuration)
+            while (timePassed < downscaleDuration)
             {
                 timePassed += Time.deltaTime;
                 float lerpAmount = 1.1f - (timePassed / downscaleDuration) * 0.1f;
@@ -120,7 +120,7 @@ namespace Namestation.Grids
             }
             tileObjectRenderer.size = new Vector2(1f, 1f);
 
-           yield return null;
+            yield return null;
         }
     }
 }

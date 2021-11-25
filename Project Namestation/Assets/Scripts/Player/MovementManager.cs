@@ -21,7 +21,7 @@ namespace Namestation.Player
         void HandleMovement()
         {
             Vector3 movement = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
-            transform.position += movement * Time.deltaTime * 5f;
+            transform.position += movement * Time.deltaTime * 2.5f;
         }
     }
 }
