@@ -104,7 +104,7 @@ namespace Namestation.Grids
             while (timePassed < duration)
             {
                 timePassed += Time.deltaTime;
-                float lerpAmount = (timePassed / duration) * 1.2f;
+                float lerpAmount = (timePassed / duration) * 1.1f;
                 tileObjectRenderer.size = new Vector2(lerpAmount, lerpAmount);
               yield return null;
             }
@@ -114,7 +114,7 @@ namespace Namestation.Grids
             while(timePassed < downscaleDuration)
             {
                 timePassed += Time.deltaTime;
-                float lerpAmount = 1.2f - (timePassed / downscaleDuration) * 0.2f;
+                float lerpAmount = 1.1f - (timePassed / downscaleDuration) * 0.1f;
                 tileObjectRenderer.size = new Vector2(lerpAmount, lerpAmount);
                 yield return null;
             }
