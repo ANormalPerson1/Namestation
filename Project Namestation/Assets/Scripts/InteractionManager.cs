@@ -205,7 +205,6 @@ namespace Namestation.Player
         {
             Vector3 quaternionEuler = rotation.eulerAngles;
             Collider2D[] colliders = Physics2D.OverlapBoxAll(position, Vector2.one * 0.95f, quaternionEuler.z);
-            Debug.Log(colliders.Length);
             return colliders.Length == 0f;
         }
     }
