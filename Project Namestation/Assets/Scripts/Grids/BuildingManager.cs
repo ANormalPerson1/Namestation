@@ -1,13 +1,11 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using Mirror;
 using Namestation.Saving;
-using UnityEngine.Experimental.Rendering.Universal;
+using Namestation.Player;
 
 namespace Namestation.Grids
 {
-    //Server only class!
     public class BuildingManager : NetworkBehaviour
     {
         private GameObject buildingGridPrefab;
@@ -87,16 +85,29 @@ namespace Namestation.Grids
             newTileObject.tileName = prefab.name;
             newTileObject.TryAssignValues();
             SyncTileObject(newTileObject);
+            AddBuildingFeedbackClient(newTileObject, tile.transform.position);
         }
 
         [ClientRpc]
         private void SyncTileObject(TileObject tileObject)
         {
             tileObject.TryAssignValues();
-            StartCoroutine(IE_PlayBuildAnimation(tileObject));
         }
 
-        IEnumerator IE_PlayBuildAnimation(TileObject tileObject)
+        [ClientRpc]
+        private void AddBuildingFeedbackClient(TileObject tileObject, Vector3 position)
+        {
+            PlayBuildSoundClient(position);
+            StartCoroutine(IE_PlayBuildAnimationClient(tileObject));
+        }
+
+        private void PlayBuildSoundClient(Vector3 position)
+        {
+            SoundManager localPlayerSoundManager = PlayerManager.localPlayerManager.soundManager;
+            localPlayerSoundManager.PlayBuildingSound(position);
+        }
+
+        IEnumerator IE_PlayBuildAnimationClient(TileObject tileObject)
         {
             SpriteRenderer tileObjectRenderer = tileObject.GetComponent<SpriteRenderer>();
             float timePassed = 0f;
