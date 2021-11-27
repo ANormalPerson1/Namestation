@@ -170,7 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  gridManager: {fileID: 0}
+  gridManager: {fileID: 372694617}
 --- !u!114 &372694617
 MonoBehaviour:
   m_ObjectHideFlags: 0

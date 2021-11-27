@@ -9,6 +9,7 @@ namespace Namestation.Player
         [HideInInspector] public bool interactionInputEnabled = true;
         [HideInInspector] public bool interactionButtonPressed = false;
         [HideInInspector] public Vector2 mousePosition;
+        [HideInInspector] public Vector2 movementInput;
         #endregion
 
         #region References
@@ -32,7 +33,30 @@ namespace Namestation.Player
         private void Update()
         {
             if (!initialized || !isLocalPlayer) return;
+            ParseInput();
+        }
 
+        private void ParseInput()
+        {
+            ParseMovementInput();
+            ParseInteractionInput();
+            ParseMousePosition();
+        }
+
+        private void ParseMovementInput()
+        {
+            if(movementInputEnabled)
+            {
+                movementInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+            }
+            else
+            {
+                movementInput = Vector2.zero;
+            }
+        }
+
+        private void ParseInteractionInput()
+        {
             if (interactionInputEnabled)
             {
                 interactionButtonPressed = Input.GetMouseButtonDown(0);
@@ -41,7 +65,10 @@ namespace Namestation.Player
             {
                 interactionButtonPressed = false;
             }
+        }
 
+        private void ParseMousePosition()
+        {
             mousePosition = playerCamera.ScreenToWorldPoint(Input.mousePosition);
         }
     }

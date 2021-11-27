@@ -7,8 +7,11 @@ namespace Namestation.Player
 {
     public class MovementManager : PlayerComponent
     {
+        [SerializeField] float movementSpeed;
         [SerializeField] Transform playerModelTransform;
+        [SerializeField] Rigidbody2D playerRigidbody;
         InputManager inputManager;
+        Transform currentGrid;
 
         public override void Initialize()
         {
@@ -25,9 +28,9 @@ namespace Namestation.Player
 
         void HandleMovement()
         {
-            Vector3 movement = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
-            transform.position += movement * Time.deltaTime * 2.5f;
-            
+            Debug.Log(inputManager.movementInput);
+            Vector2 localVelocity = inputManager.movementInput * movementSpeed;
+            playerRigidbody.velocity = localVelocity;
         }
 
         void HandleRotation()
