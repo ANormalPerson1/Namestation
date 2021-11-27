@@ -146,6 +146,9 @@ MonoBehaviour:
   movementSpeed: 2.5
   playerModelTransform: {fileID: 4756328630223087414}
   playerRigidbody: {fileID: 6501763608162013337}
+  constructionLayermask:
+    serializedVersion: 2
+    m_Bits: 384
 --- !u!114 &5025189858764882008
 MonoBehaviour:
   m_ObjectHideFlags: 0
