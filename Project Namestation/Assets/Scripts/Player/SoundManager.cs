@@ -1,16 +1,26 @@
 using UnityEngine;
 
-public class SoundManager : PlayerComponent
+namespace Namestation.Player
 {
-    [SerializeField] AudioClip buildBlockClip;
-
-    public override void Initialize()
+    public class SoundManager : PlayerComponent
     {
-        base.Initialize();
-    }
+        [SerializeField] AudioClip buildBlockClip;
+        [SerializeField] GameObject audioSourcePrefab;
 
-    public void PlayBuildingSound(Vector3 position)
-    {
-        AudioSource.PlayClipAtPoint(buildBlockClip, position);
+        public override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        public void PlayBuildingSound(Transform parent, Vector3 localPosition)
+        {
+            GameObject audioSourceGO = Instantiate(audioSourcePrefab, parent);
+            audioSourceGO.transform.localPosition = localPosition;
+
+            AudioSource audioSource = audioSourceGO.GetComponent<AudioSource>();
+            float soundDuration = buildBlockClip.length + 0.5f;
+            audioSource.PlayOneShot(buildBlockClip);
+            Destroy(audioSource.gameObject, soundDuration);
+        }
     }
 }

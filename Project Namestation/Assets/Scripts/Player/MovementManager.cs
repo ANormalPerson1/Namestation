@@ -27,7 +27,6 @@ namespace Namestation.Player
             HandleMovement();
             HandleRotation();
             CheckOverlap();
-            TEMP_HandleGridMovement();
         }
 
         void CheckOverlap()
@@ -46,19 +45,28 @@ namespace Namestation.Player
 
             if(transform.parent != currentGrid)
             {
-                transform.parent = currentGrid;
-                currentGridRigidbody2D = currentGrid.GetComponent<Rigidbody2D>();
+                SetParentServer(currentGrid);
             }
         }
 
-        void TEMP_HandleGridMovement()
+        [Command]
+        private void SetParentServer(Transform parent)
         {
-            Debug.Log("wat..");
-            if(currentGrid != null)
+            transform.parent = parent;
+            SetParentClient(parent);
+        }
+
+        [ClientRpc]
+        private void SetParentClient(Transform parent)
+        {
+            transform.parent = parent;
+            if(parent != null)
             {
-                Debug.Log(Input.GetKey(KeyCode.Space) + " aaaa");
-                Vector2 forceDirection = Input.GetKey(KeyCode.Space) ? Vector2.left * 5f * Time.deltaTime : Vector2.zero;
-                currentGridRigidbody2D.AddForce(forceDirection);
+                currentGridRigidbody2D = parent.GetComponent<Rigidbody2D>();
+            }
+            else
+            {
+                currentGridRigidbody2D = null;
             }
         }
 
@@ -67,7 +75,7 @@ namespace Namestation.Player
             Vector2 localVelocity = inputManager.movementInput * movementSpeed;
             playerRigidbody.velocity = localVelocity;
 
-            if (currentGrid != null)
+            if (currentGridRigidbody2D != null)
             {
                 playerRigidbody.velocity += currentGridRigidbody2D.velocity;
             }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 234045472766434597}
   - component: {fileID: 7585423699616566112}
   - component: {fileID: 3092519077036047363}
+  - component: {fileID: 97423930704636438}
   - component: {fileID: 4165298621701727456}
   - component: {fileID: 6501763608162013337}
   - component: {fileID: 1640043601353600119}
@@ -91,6 +92,36 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+--- !u!114 &97423930704636438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 234045472766434596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734b48bea0b204338958ee3d885e11f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 1
+  sendInterval: 0.05
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 0
+  bufferTimeMultiplier: 1
+  bufferSizeLimit: 64
+  catchupThreshold: 4
+  catchupMultiplier: 0.1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  target: {fileID: 4756328630223087414}
 --- !u!58 &4165298621701727456
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -165,8 +196,8 @@ MonoBehaviour:
   syncInterval: 0.1
   playerManager: {fileID: 0}
   playerCamera: {fileID: 234045473348374435}
-  cameraFollowIntensity: 0.2
-  maximumCameraFollowLength: 1
+  cameraFollowIntensity: 0.1
+  maximumCameraFollowLength: 3
 --- !u!114 &4282877011775290896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,7 +216,8 @@ MonoBehaviour:
   movementInputEnabled: 1
   interactionInputEnabled: 1
   interactionButtonPressed: 0
-  mousePosition: {x: 0, y: 0}
+  globalMousePosition: {x: 0, y: 0}
+  localMousePosition: {x: 0, y: 0}
   movementInput: {x: 0, y: 0}
 --- !u!114 &114638135176750240
 MonoBehaviour:
@@ -262,6 +294,7 @@ MonoBehaviour:
   syncInterval: 0.1
   playerManager: {fileID: 0}
   buildBlockClip: {fileID: 8300000, guid: a163926f0f7e80044be1ab81f4ea819b, type: 3}
+  audioSourcePrefab: {fileID: 5895719137881760931, guid: a992d20ddc1f6fe44ba40e22ab9f095b, type: 3}
 --- !u!114 &7219236142860363087
 MonoBehaviour:
   m_ObjectHideFlags: 0

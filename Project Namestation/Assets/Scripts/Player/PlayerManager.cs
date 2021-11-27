@@ -15,12 +15,16 @@ namespace Namestation.Player
 
         private void Start()
         {
-            if (localPlayerManager != null)
+            if(isLocalPlayer)
             {
-                Debug.LogError("More than 1 instance of PlayerManager found!");
-                return;
+                if (localPlayerManager != null)
+                {
+                    Debug.LogError("More than 1 instance of PlayerManager found!");
+                    return;
+                }
+                localPlayerManager = this;
             }
-            localPlayerManager = this;
+           
 
             PlayerComponent[] playerComponents = GetComponents<PlayerComponent>();
             foreach(PlayerComponent playerComponent in playerComponents)

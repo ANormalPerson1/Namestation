@@ -85,7 +85,7 @@ namespace Namestation.Grids
             newTileObject.tileName = prefab.name;
             newTileObject.TryAssignValues();
             SyncTileObject(newTileObject);
-            AddBuildingFeedbackClient(newTileObject, tile.transform.position);
+            AddBuildingFeedbackClient(tile.transform.parent, newTileObject, tile.transform.localPosition);
         }
 
         [ClientRpc]
@@ -95,16 +95,16 @@ namespace Namestation.Grids
         }
 
         [ClientRpc]
-        private void AddBuildingFeedbackClient(TileObject tileObject, Vector3 position)
+        private void AddBuildingFeedbackClient(Transform buildingGridTransform, TileObject tileObject, Vector3 localPosition)
         {
-            PlayBuildSoundClient(position);
+            PlayBuildSoundClient(buildingGridTransform, localPosition);
             StartCoroutine(IE_PlayBuildAnimationClient(tileObject));
         }
 
-        private void PlayBuildSoundClient(Vector3 position)
+        private void PlayBuildSoundClient(Transform parent, Vector3 localPosition)
         {
             SoundManager localPlayerSoundManager = PlayerManager.localPlayerManager.soundManager;
-            localPlayerSoundManager.PlayBuildingSound(position);
+            localPlayerSoundManager.PlayBuildingSound(parent, localPosition);
         }
 
         IEnumerator IE_PlayBuildAnimationClient(TileObject tileObject)
