@@ -9,7 +9,7 @@ using Mirror;
 
 namespace Namestation.Player
 {
-    public class InteractionManager : PlayerComponent
+    public class BuildingManager : PlayerComponent
     {
         [SerializeField] float collisionDetectionRadius;
         [SerializeField] LayerMask floorLayerMask;
@@ -28,30 +28,28 @@ namespace Namestation.Player
         private void Update()
         {
             if (!initialized || !isLocalPlayer) return;
-            CheckPlaceObject();
+            CheckPlaceObject(inputManager.mousePosition);
         }
 
-        private void CheckPlaceObject()
+        private void CheckPlaceObject(Vector2 position)
         {
             if (inputManager.interactionButtonPressed)
             {
-                AttemptToPlaceObject();
+                AttemptToPlaceObject(position);
             }
         }
 
-        private void AttemptToPlaceObject()
+        private void AttemptToPlaceObject(Vector2 position)
         {
-            Vector2 mousePosition = inputManager.mousePosition;
-
-            Collider2D[] colliders = GetCollidersNearPlacementPoint(mousePosition);
+            Collider2D[] colliders = GetCollidersNearPlacementPoint(position);
             if(colliders.Length == 0)
             {
-                PlaceObjectAsNewStructure(mousePosition);
+                PlaceObjectAsNewStructure(position);
             }
             else
             {
                 Collider2D nearestCollider = colliders[0];
-                PlaceObjectAddToExistingStructure(mousePosition, nearestCollider);
+                PlaceObjectAddToExistingStructure(position, nearestCollider);
             }
         }
 
@@ -67,7 +65,12 @@ namespace Namestation.Player
 
         private void PlaceObjectAsNewStructure(Vector2 mousePosition)
         {
-            PlaceObjectServer(currentlyBuildingPrefab.name, mousePosition, null, null);
+            TileObject tileObject = currentlyBuildingPrefab.GetComponent<TileObject>();
+
+            if (tileObject.CanPlaceOn(null))
+            {
+                PlaceObjectServer(currentlyBuildingPrefab.name, mousePosition, null, null);
+            }
         }
 
         private void PlaceObjectAddToExistingStructure(Vector2 mousePosition, Collider2D existingTileObjectCollider)
@@ -93,7 +96,12 @@ namespace Namestation.Player
             Transform existingGrid = existingTile.parent;
             Vector2 localPlacementPosition = existingGrid.InverseTransformPoint(placementPosition);
 
-            PlaceObjectServer(currentlyBuildingPrefab.name, localPlacementPosition, existingGrid, null);
+            TileObject tileObject = currentlyBuildingPrefab.GetComponent<TileObject>();
+
+            if(tileObject.CanPlaceOn(null))
+            {
+                PlaceObjectServer(currentlyBuildingPrefab.name, localPlacementPosition, existingGrid, null);
+            }
         }
 
         private void PlaceObjectAddToTile(Transform existingTileObject)
@@ -105,7 +113,7 @@ namespace Namestation.Player
             Tile tile = existingTile.GetComponent<Tile>();
             TileObject tileObject = currentlyBuildingPrefab.GetComponent<TileObject>();
 
-            if(!tile.ContainsPlacedLayer(tileObject.layer))
+            if(tileObject.CanPlaceOn(tile))
             {
                 Debug.Log("Placed object, added to existing!");
                 PlaceObjectServer(currentlyBuildingPrefab.name, localPlacementPosition, existingGrid, existingTile);
@@ -121,17 +129,17 @@ namespace Namestation.Player
         private void PlaceObjectServer(string tileObjectPrefabString, Vector2 placementPosition, Transform parentGridTransform, Transform parentTileTransform)
         {
             GameObject prefab  = ResourceManager.GetGridPrefab(tileObjectPrefabString);
-            BuildingManager serverBuildingManager = BuildingManager.instance;
+            GridManager serverGridManager = GridManager.instance;
 
             if (parentGridTransform == null)
             {
                 //Position is passed globally, as there are no local references
                 //Create new building grid and tile
-                BuildingGrid buildingGrid = serverBuildingManager.CreateBuildingGridServer(placementPosition, Quaternion.identity, Vector3.zero);
+                BuildingGrid buildingGrid = serverGridManager.CreateBuildingGridServer(placementPosition, Quaternion.identity, Vector3.zero);
                 Vector2 localPlacementPosition = buildingGrid.transform.InverseTransformPoint(placementPosition);
 
-                Tile tile = serverBuildingManager.CreateTileServer(buildingGrid, localPlacementPosition);
-                serverBuildingManager. CreateTileObjectServer(prefab, tile);
+                Tile tile = serverGridManager.CreateTileServer(buildingGrid, localPlacementPosition);
+                serverGridManager. CreateTileObjectServer(prefab, tile);
             }
             else
             {
@@ -143,14 +151,14 @@ namespace Namestation.Player
                 Tile tile;
                 if (parentTileTransform == null)
                 {
-                    tile = serverBuildingManager.CreateTileServer(buildingGrid, localPlacementPosition);
+                    tile = serverGridManager.CreateTileServer(buildingGrid, localPlacementPosition);
                 }
                 else
                 {
                     tile = parentTileTransform.GetComponent<Tile>();
                 }
 
-                serverBuildingManager.CreateTileObjectServer(prefab, tile);
+                serverGridManager.CreateTileObjectServer(prefab, tile);
             }
         }
 

@@ -170,7 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  buildingManager: {fileID: 372694617}
+  gridManager: {fileID: 0}
 --- !u!114 &372694617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 372694614}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57a6f0fcff26f354cb46d68e09a6a707, type: 3}
+  m_Script: {fileID: 11500000, guid: bfa39039f6f354a4ba2f3174182da130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0

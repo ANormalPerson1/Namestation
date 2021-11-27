@@ -184,7 +184,7 @@ MonoBehaviour:
   syncInterval: 0.1
   cameraManager: {fileID: 5025189858764882008}
   inputManager: {fileID: 4282877011775290896}
-  interactionManager: {fileID: 114638135176750240}
+  buildingManager: {fileID: 114638135176750240}
   movementManager: {fileID: 1640043601353600119}
   soundManager: {fileID: 4452859066724884573}
 --- !u!114 &5707520989599969700

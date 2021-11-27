@@ -8,7 +8,7 @@ namespace Namestation.Saving
     public class SaveLoader : NetworkBehaviour
     {
         GameObject buildingGridPrefab;
-        [SerializeField] BuildingManager buildingManager;
+        [SerializeField] GridManager gridManager;
 
         public static SaveLoader instance;
         private void Awake()
@@ -41,7 +41,7 @@ namespace Namestation.Saving
             Vector3 gridVelocity = serializableBuildingGrid.gridVelocity;
             Quaternion gridRotation = serializableBuildingGrid.gridRotation;
 
-            BuildingGrid buildingGrid = buildingManager.CreateBuildingGridServer(gridPosition, gridRotation, gridVelocity);
+            BuildingGrid buildingGrid = gridManager.CreateBuildingGridServer(gridPosition, gridRotation, gridVelocity);
             foreach(SerializableTile serializableTile in serializableBuildingGrid.tileWrapper.serializableTiles)
             {
                 LoadTile(buildingGrid, serializableTile);
@@ -50,7 +50,7 @@ namespace Namestation.Saving
 
         public void LoadTile(BuildingGrid buildingGrid, SerializableTile serializableTile)
         {
-            Tile tile = buildingManager.CreateTileServer(buildingGrid, serializableTile.position);
+            Tile tile = gridManager.CreateTileServer(buildingGrid, serializableTile.position);
 
             List<string> tileObjectsJSON = serializableTile.tileObjectsJSON;
             List<string> tileObjectNames = serializableTile.tileObjectNames;
@@ -73,7 +73,7 @@ namespace Namestation.Saving
                 Debug.LogError("Warning! Null reference expection on loading grid object prefab!");
             }
 
-            BuildingManager.instance.CreateTileObjectServer(prefab, tile, tileObjectJSON);
+            GridManager.instance.CreateTileObjectServer(prefab, tile, tileObjectJSON);
         }
     }
 }

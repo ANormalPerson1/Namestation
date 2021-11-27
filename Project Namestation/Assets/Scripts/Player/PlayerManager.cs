@@ -9,7 +9,7 @@ namespace Namestation.Player
 
         public CameraManager cameraManager;
         public InputManager inputManager;
-        public InteractionManager interactionManager;
+        public BuildingManager buildingManager;
         public MovementManager movementManager;
         public SoundManager soundManager;
 

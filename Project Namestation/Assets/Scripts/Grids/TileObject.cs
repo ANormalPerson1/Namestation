@@ -29,7 +29,41 @@ namespace Namestation.Grids
             }
         }
 
-        
+        public bool CanPlaceOn(Tile tile)
+        {
+            if(tile == null)
+            {
+                if (layer == Layer.Scaffhold) return true;
+                return false;
+            }
+
+            if (tile.ContainsPlacedLayer(layer)) return false;
+
+
+            switch(layer)
+            {
+                case Layer.Scaffhold:
+                    return false;
+                case Layer.Plating:
+                    if (tile.ContainsPlacedLayer(Layer.Scaffhold)) return true;
+                    return false;
+                case Layer.Wire:
+                case Layer.Pipe:
+                    if (tile.ContainsPlacedLayer(Layer.Plating) && !tile.ContainsPlacedLayer(Layer.Floor)) return true;
+                    return false;
+                case Layer.Floor:
+                    if (tile.ContainsPlacedLayer(Layer.Plating)) return true;
+                    return false;
+                case Layer.Wall:
+                case Layer.Furniture:
+                    bool containsSimilarObjects = tile.ContainsPlacedLayer(Layer.Wall) || tile.ContainsPlacedLayer(Layer.Furniture);
+                    if (tile.ContainsPlacedLayer(Layer.Floor) && !containsSimilarObjects) return true;
+                    return false;
+                default:
+                    return false;
+
+            }
+        }
     }
 
     public enum Layer

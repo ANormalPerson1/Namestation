@@ -6,18 +6,18 @@ using Namestation.Player;
 
 namespace Namestation.Grids
 {
-    public class BuildingManager : NetworkBehaviour
+    public class GridManager : NetworkBehaviour
     {
         private GameObject buildingGridPrefab;
         private GameObject tilePrefab;
 
 
-        public static BuildingManager instance;
+        public static GridManager instance;
         private void Awake()
         {
             if (instance != null)
             {
-                Debug.LogError("More than 1 instance of BuildingManager found!");
+                Debug.LogError("More than 1 instance of GridManager found!");
                 return;
             }
             instance = this;

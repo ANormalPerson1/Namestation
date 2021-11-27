@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3687015830650275217}
   - component: {fileID: 146642509019186286}
   m_Layer: 7
-  m_Name: Floor
+  m_Name: Plating
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: -2126986227
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ba1f9fd09559062438fc9eeca97957b3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a6b66bf79f0e11489f68d9ee2fead8d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -126,9 +126,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
-  tileName: Floor
+  tileName: Plating
   currentHealth: 100
-  layer: 2
+  layer: 1
 --- !u!114 &146642509019186286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,5 +144,5 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: f6da399210c1d3a4aa287bd77824d01a
+  m_AssetId: 769bc30715ea21140b32ac2873a80525
   hasSpawned: 0
