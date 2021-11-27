@@ -8,8 +8,10 @@ namespace Namestation.Player
         [HideInInspector] public bool movementInputEnabled = true;
         [HideInInspector] public bool interactionInputEnabled = true;
         [HideInInspector] public bool interactionButtonPressed = false;
-        [HideInInspector] public Vector2 mousePosition;
+        [HideInInspector] public Vector2 globalMousePosition, localMousePosition;
         [HideInInspector] public Vector2 movementInput;
+
+        private Vector2 screenWorldScale;
         #endregion
 
         #region References
@@ -22,6 +24,14 @@ namespace Namestation.Player
             base.Initialize();
             cameraManager = playerManager.cameraManager;
             playerCamera = cameraManager.playerCamera;
+            DetermineScreenScale();
+        }
+
+        private void DetermineScreenScale()
+        {
+            Vector2 bottomLeftPoint = playerCamera.ViewportToWorldPoint(Vector2.zero);
+            Vector2 topRightPoint = playerCamera.ViewportToWorldPoint(Vector2.one);
+            screenWorldScale = topRightPoint - bottomLeftPoint;
         }
 
         private void SetInputEnabled(bool mode)
@@ -69,7 +79,12 @@ namespace Namestation.Player
 
         private void ParseMousePosition()
         {
-            mousePosition = playerCamera.ScreenToWorldPoint(Input.mousePosition);
+            globalMousePosition = playerCamera.ScreenToWorldPoint(Input.mousePosition);
+
+            Vector2 viewportMousePosition = playerCamera.ScreenToViewportPoint(Input.mousePosition);
+            Vector2 viewportCameraPosition = new Vector2(0.5f, 0.5f);
+            Vector2 viewportMouseLocalDirection = (viewportMousePosition - viewportCameraPosition);
+            localMousePosition = new Vector2(viewportMouseLocalDirection.x * screenWorldScale.x, viewportMouseLocalDirection.y * screenWorldScale.y);
         }
     }
 }

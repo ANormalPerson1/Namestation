@@ -28,7 +28,8 @@ namespace Namestation.Player
         private void Update()
         {
             if (!initialized || !isLocalPlayer) return;
-            CheckPlaceObject(inputManager.mousePosition);
+            //REDO THIS!
+            CheckPlaceObject(inputManager.globalMousePosition);
         }
 
         private void CheckPlaceObject(Vector2 position)

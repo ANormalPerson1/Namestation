@@ -33,19 +33,15 @@ namespace Namestation.Player
 
         private void PositionCamera()
         {
-            Vector3 mousePosition = inputManager.mousePosition;
-            mousePosition.z = playerCamera.transform.position.z;
-            Vector3 direction = (mousePosition - playerCamera.transform.position) * cameraFollowIntensity;
+            Vector2 localMousePosition = inputManager.localMousePosition;
 
-            if (direction.magnitude > maximumCameraFollowLength)
+            if (localMousePosition.magnitude > maximumCameraFollowLength)
             {
-                direction = direction.normalized * maximumCameraFollowLength;
+                localMousePosition = localMousePosition.normalized * maximumCameraFollowLength;
             }
 
-            Vector3 endPosition = direction + playerCamera.transform.position;
-
-            Vector3 middle = (endPosition + transform.position) / 2f;
-            playerCamera.transform.position = new Vector3(middle.x, middle.y, playerCamera.transform.position.z);
+            Vector3 middle = localMousePosition / 2f;
+            playerCamera.transform.localPosition = new Vector3(middle.x, middle.y, playerCamera.transform.position.z);
         }
     }
 }

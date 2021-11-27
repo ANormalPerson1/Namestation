@@ -59,7 +59,6 @@ namespace Namestation.Player
                 Debug.Log(Input.GetKey(KeyCode.Space) + " aaaa");
                 Vector2 forceDirection = Input.GetKey(KeyCode.Space) ? Vector2.left * 5f * Time.deltaTime : Vector2.zero;
                 currentGridRigidbody2D.AddForce(forceDirection);
-                Debug.Log(currentGridRigidbody2D.velocity + " " + forceDirection);
             }
         }
 
@@ -76,10 +75,8 @@ namespace Namestation.Player
 
         void HandleRotation()
         {
-            Vector3 mousePosition = inputManager.mousePosition;
-            float deltaY = mousePosition.y - playerModelTransform.position.y;
-            float deltaX = mousePosition.x - playerModelTransform.position.x;
-            playerModelTransform.eulerAngles = new Vector3(0f, 0f, Mathf.Atan2(deltaY, deltaX) * Mathf.Rad2Deg);
+            Vector3 localMousePosition = inputManager.localMousePosition;
+            playerModelTransform.eulerAngles = new Vector3(0f, 0f, Mathf.Atan2(localMousePosition.y, localMousePosition.x) * Mathf.Rad2Deg);
         }
     }
 }
