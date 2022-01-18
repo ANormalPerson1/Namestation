@@ -33,7 +33,7 @@ namespace Namestation.Grids
         {
             if(tile == null)
             {
-                if (layer == Layer.Scaffhold) return true;
+                if (layer == Layer.Floor) return true;
                 return false;
             }
 
@@ -42,23 +42,18 @@ namespace Namestation.Grids
 
             switch(layer)
             {
-                case Layer.Scaffhold:
-                    return false;
-                case Layer.Plating:
-                    if (tile.ContainsPlacedLayer(Layer.Scaffhold)) return true;
+                case Layer.Floor:
                     return false;
                 case Layer.Wire:
                 case Layer.Pipe:
-                    if (tile.ContainsPlacedLayer(Layer.Plating) && !tile.ContainsPlacedLayer(Layer.Floor)) return true;
-                    return false;
-                case Layer.Floor:
-                    if (tile.ContainsPlacedLayer(Layer.Plating)) return true;
-                    return false;
+                    return tile.ContainsPlacedLayer(Layer.Floor);
                 case Layer.Wall:
                 case Layer.Furniture:
                     bool containsSimilarObjects = tile.ContainsPlacedLayer(Layer.Wall) || tile.ContainsPlacedLayer(Layer.Furniture);
                     if (tile.ContainsPlacedLayer(Layer.Floor) && !containsSimilarObjects) return true;
                     return false;
+                case Layer.WallMount:
+                    return tile.ContainsPlacedLayer(Layer.Wall);
                 default:
                     return false;
 
@@ -68,8 +63,6 @@ namespace Namestation.Grids
 
     public enum Layer
     {
-        Scaffhold,
-        Plating,
         Floor,
         Wall,
         WallMount,

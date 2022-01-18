@@ -42,5 +42,5 @@ Material:
     - ClipThreshold: 0.99
     - Randomness: 5
     m_Colors:
-    - _Offset: {r: -0.0015448342, g: 0.005710318, b: 0, a: 0}
+    - _Offset: {r: -0.0015537442, g: 0.0064800587, b: 0, a: 0}
   m_BuildTextureStacks: []
