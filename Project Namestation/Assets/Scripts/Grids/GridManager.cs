@@ -67,6 +67,7 @@ namespace Namestation.Grids
         private void SyncTile(Tile tile)
         {
             tile.TryAssignValues();
+            tile.GetConnectedTiles();
         }
 
         public void CreateTileObjectServer(GameObject prefab, Tile tile, string jsonOverride = null)

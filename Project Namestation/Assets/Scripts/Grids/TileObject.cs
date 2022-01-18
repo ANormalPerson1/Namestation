@@ -20,7 +20,7 @@ namespace Namestation.Grids
 
         public void TryAssignValues() //Basically syncvar, but for gameobject parent, position and name
         {
-            if(currentParent != null && transform.parent == null)
+            if (currentParent != null && transform.parent == null)
             {
                 transform.parent = currentParent;
                 transform.localPosition = Vector2.zero;
@@ -31,7 +31,7 @@ namespace Namestation.Grids
 
         public bool CanPlaceOn(Tile tile)
         {
-            if(tile == null)
+            if (tile == null)
             {
                 if (layer == Layer.Floor) return true;
                 return false;
@@ -40,7 +40,7 @@ namespace Namestation.Grids
             if (tile.ContainsPlacedLayer(layer)) return false;
 
 
-            switch(layer)
+            switch (layer)
             {
                 case Layer.Floor:
                     return false;
@@ -79,7 +79,7 @@ namespace Namestation.Grids
 
         public TileObjectWrapper(List<TileObject> tileObjects)
         {
-            foreach(TileObject tileObject in tileObjects)
+            foreach (TileObject tileObject in tileObjects)
             {
                 tileObjectsJSON.Add(JsonUtility.ToJson(tileObject));
                 tileObjectNames.Add(tileObject.tileName);
