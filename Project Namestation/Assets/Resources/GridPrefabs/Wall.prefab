@@ -1744,6 +1744,7 @@ GameObject:
   - component: {fileID: 4268903164798134638}
   - component: {fileID: -914085290438490813}
   - component: {fileID: 6610724641579617078}
+  - component: {fileID: 459575897210524334}
   m_Layer: 8
   m_Name: Wall
   m_TagString: Untagged
@@ -1923,6 +1924,24 @@ MonoBehaviour:
   tileName: Wall
   currentHealth: 100
   layer: 3
+--- !u!114 &459575897210524334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4270895829921875585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7c2c019bc1b7904e991e85e9dcf3496, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  standaloneSprite: {fileID: 21300000, guid: 5c346f44ced4bc543b46857eb8a8c2af, type: 3}
+  cornerSprite: {fileID: 21300000, guid: fe3cb3a85c63fe74b834ea408d534546, type: 3}
+  edgeSprite: {fileID: 21300000, guid: 58c49b5a69b92ab43a76907a97bf2f9a, type: 3}
+  straghtSprite: {fileID: 21300000, guid: b8f93fdd66b6e524bace4cea28203b0a, type: 3}
+  centerSprite: {fileID: 21300000, guid: 6d9535dd3e246b1419b7c944de494782, type: 3}
+  endSprite: {fileID: 21300000, guid: 562c56b4859caec4e9af63904cd2a650, type: 3}
 --- !u!1 &4311475446556962278
 GameObject:
   m_ObjectHideFlags: 0
