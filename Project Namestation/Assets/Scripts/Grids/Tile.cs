@@ -24,7 +24,6 @@ namespace Namestation.Grids
                 transform.parent = currentParent;
                 transform.localPosition = new Vector2(position.x, position.y);
                 currentParent.GetComponent<BuildingGrid>().tiles.Add(this);
-                GetAdjacentTiles();
             }
         }
 
@@ -51,12 +50,6 @@ namespace Namestation.Grids
         {
             Tile[] connectedTiles = new Tile[4];
 
-
-            Debug.Log("Comparison: " + transform.parent);
-            Tile middleTile = GetAdjacentTile(Vector3.zero);
-            bool test = middleTile != null;
-            Debug.Log("Test: " + test);
-
             Tile topTile = GetAdjacentTile(currentParent.up);
             Tile bottomTile = GetAdjacentTile(-currentParent.up);
             Tile rightTile = GetAdjacentTile(currentParent.right);
@@ -77,13 +70,6 @@ namespace Namestation.Grids
             Vector3 checkPosition = transform.position + direction;
 
             LayerMask floorLayerMask = 1 << 7;
-            RaycastHit2D[] hit = Physics2D.LinecastAll(checkPosition + Vector3.forward, checkPosition + Vector3.back);
-            if(hit.Length > 0)
-            {
-                Debug.Log("Raycast item count: " + hit.Length + " First item: " + hit[0].transform.name);
-            }
-         
-
 
             Collider2D[] candidates = Physics2D.OverlapBoxAll(checkPosition, Vector2.one * 0.1f, zRotation, floorLayerMask);
             Debug.Log(candidates.Length);
@@ -91,7 +77,6 @@ namespace Namestation.Grids
             Collider2D candidateCollider = Physics2D.OverlapBox(checkPosition, Vector2.one * 0.1f, zRotation, floorLayerMask);
             if (candidateCollider != null)
             {
-                Debug.Log("Item: " + candidateCollider.name + " Position: " + candidateCollider.transform.position + "Parent: " + candidateCollider.transform.parent);
                 if (candidateCollider.GetComponentInParent<Tile>())
                 {
                     return candidateCollider.GetComponentInParent<Tile>();
