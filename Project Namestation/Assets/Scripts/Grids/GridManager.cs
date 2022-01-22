@@ -61,7 +61,6 @@ namespace Namestation.Grids
             NetworkServer.Spawn(newTileGameObject);
             TileObject newTileObject = newTileGameObject.GetComponent<TileObject>();
 
-            //Check if syncvar works for tileobjects!
             if (jsonOverride != null)
             {
                 JsonUtility.FromJsonOverwrite(jsonOverride, newTileObject);

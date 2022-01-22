@@ -61,7 +61,6 @@ namespace Namestation.Player
             if (colliders.Length == 0) return colliders;
               
             colliders = colliders.OrderBy(col => Vector2.Distance(mousePosition, col.ClosestPoint(mousePosition))).ToArray();
-            Debug.Log(colliders[0].name);
             return colliders;
         }
 
