@@ -23,8 +23,8 @@ namespace Namestation.Grids
             {
                 transform.parent = currentParent;
                 transform.localPosition = new Vector2(position.x, position.y);
-
                 currentParent.GetComponent<BuildingGrid>().tiles.Add(this);
+                GetAdjacentTiles();
             }
         }
 
@@ -47,46 +47,37 @@ namespace Namestation.Grids
         }
 
 
-        public Tile[] GetConnectedTiles()
+        public Tile[] GetAdjacentTiles()
         {
             Tile[] connectedTiles = new Tile[4];
 
-            float zRotation = transform.eulerAngles.z;
-            Vector3 topPosition = transform.TransformPoint(Vector3.up);
-            Vector3 bottomPosition = transform.TransformPoint(Vector3.down);
-            Vector3 rightPosition = transform.TransformPoint(Vector3.right);
-            Vector3 leftPosition = transform.TransformPoint(Vector3.left);
+            Vector3 topPosition = transform.position + currentParent.up;
+            Vector3 bottomPosition = transform.position - currentParent.up;
+            Vector3 rightPosition = transform.position + currentParent.right;
+            Vector3 leftPosition = transform.position - currentParent.right;
 
-            Tile topTile = GetTile(topPosition, zRotation);
-            Tile bottomTile = GetTile(bottomPosition, zRotation);
-            Tile rightTile = GetTile(rightPosition, zRotation);
-            Tile leftTile = GetTile(leftPosition, zRotation);
+            Tile topTile = GetTile(topPosition, currentParent);
+            Tile bottomTile = GetTile(bottomPosition, currentParent);
+            Tile rightTile = GetTile(rightPosition, currentParent);
+            Tile leftTile = GetTile(leftPosition, currentParent);
 
             connectedTiles[0] = topTile;
             connectedTiles[1] = bottomTile;
             connectedTiles[2] = rightTile;
             connectedTiles[3] = leftTile;
 
-            foreach (Tile tile in connectedTiles)
-            {
-                if (tile == null)
-                {
-                    Debug.Log("None!");
-                }
-                else
-                {
-                    Debug.Log(tile.gameObject.name + " " + tile.transform.position);
-                }
-            }
-
             return connectedTiles;
         }
 
-        private Tile GetTile(Vector3 position, float zRotation)
+        public static Tile GetTile(Vector3 position, Transform buildingGrid)
         {
-            Collider2D candidateCollider = Physics2D.OverlapBox(position, Vector2.one * 0.95f, zRotation);
+            float zRotation = buildingGrid.eulerAngles.z;
+
+            LayerMask floorLayerMask = 1 << 7;
+            Collider2D candidateCollider = Physics2D.OverlapBox(position, Vector2.one * 0.95f, zRotation, floorLayerMask);
             if (candidateCollider != null)
             {
+                Debug.Log("The gotten is: " + candidateCollider.name + " " + candidateCollider.transform.position);
                 if (candidateCollider.GetComponentInParent<Tile>())
                 {
                     return candidateCollider.GetComponentInParent<Tile>();

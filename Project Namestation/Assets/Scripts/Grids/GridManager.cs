@@ -39,14 +39,7 @@ namespace Namestation.Grids
             BuildingGrid newGrid = newGridGameObject.GetComponent<BuildingGrid>();
             SaveManager.buildingGrids.Add(newGrid);
             newGrid.TryAssignValues();
-            SyncBuildingGrid(newGrid);
             return newGrid;
-        }
-
-        [ClientRpc]
-        private void SyncBuildingGrid(BuildingGrid buildingGrid)
-        {
-            buildingGrid.TryAssignValues();
         }
 
         public Tile CreateTileServer(BuildingGrid parentBuildingGrid, Vector2 localPosition)
@@ -59,15 +52,7 @@ namespace Namestation.Grids
             newTile.position = new Vector2Int(Mathf.RoundToInt(localPosition.x), Mathf.RoundToInt(localPosition.y));
 
             newTile.TryAssignValues();
-            SyncTile(newTile);
             return newTile;
-        }
-
-        [ClientRpc]
-        private void SyncTile(Tile tile)
-        {
-            tile.TryAssignValues();
-            tile.GetConnectedTiles();
         }
 
         public void CreateTileObjectServer(GameObject prefab, Tile tile, string jsonOverride = null)
@@ -85,14 +70,7 @@ namespace Namestation.Grids
             newTileObject.currentParent = tile.transform;
             newTileObject.tileName = prefab.name;
             newTileObject.TryAssignValues();
-            SyncTileObject(newTileObject);
             AddBuildingFeedbackClient(tile.transform.parent, newTileObject, tile.transform.localPosition);
-        }
-
-        [ClientRpc]
-        private void SyncTileObject(TileObject tileObject)
-        {
-            tileObject.TryAssignValues();
         }
 
         [ClientRpc]

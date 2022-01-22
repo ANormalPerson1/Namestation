@@ -173,7 +173,7 @@ MonoBehaviour:
   syncInterval: 0
   tileName: Wall
   currentHealth: 100
-  layer: 3
+  layer: 1
 --- !u!114 &459575897210524334
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -57,10 +57,11 @@ namespace Namestation.Player
         private Collider2D[] GetCollidersNearPlacementPoint(Vector2 mousePosition)
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(mousePosition, collisionDetectionRadius, floorLayerMask);
+         
             if (colliders.Length == 0) return colliders;
-
+              
             colliders = colliders.OrderBy(col => Vector2.Distance(mousePosition, col.ClosestPoint(mousePosition))).ToArray();
-
+            Debug.Log(colliders[0].name);
             return colliders;
         }
 
@@ -213,7 +214,7 @@ namespace Namestation.Player
         private bool GridClear(Vector2 position, Quaternion rotation)
         {
             Vector3 quaternionEuler = rotation.eulerAngles;
-            Collider2D[] colliders = Physics2D.OverlapBoxAll(position, Vector2.one * 0.95f, quaternionEuler.z);
+            Collider2D[] colliders = Physics2D.OverlapBoxAll(position, Vector2.one * 0.95f, quaternionEuler.z, floorLayerMask);
             return colliders.Length == 0f;
         }
     }
