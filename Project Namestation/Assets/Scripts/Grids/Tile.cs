@@ -33,6 +33,18 @@ namespace Namestation.Grids
             return new SerializableTile(this);
         }
 
+        public bool ContainsPlacedName(string name)
+        {
+            foreach (TileObject tileObject in tileObjects)
+            {
+                if (tileObject.name.Equals(name))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool ContainsPlacedLayer(Layer layer)
         {
             foreach (TileObject tileObject in tileObjects)
@@ -51,14 +63,15 @@ namespace Namestation.Grids
             Tile[] connectedTiles = new Tile[4];
 
             Tile topTile = GetAdjacentTile(currentParent.up);
+            Tile leftTile = GetAdjacentTile(-currentParent.right);
             Tile bottomTile = GetAdjacentTile(-currentParent.up);
             Tile rightTile = GetAdjacentTile(currentParent.right);
-            Tile leftTile = GetAdjacentTile(-currentParent.right);
+        
 
             connectedTiles[0] = topTile;
-            connectedTiles[1] = bottomTile;
-            connectedTiles[2] = rightTile;
-            connectedTiles[3] = leftTile;
+            connectedTiles[1] = leftTile;
+            connectedTiles[2] = bottomTile;
+            connectedTiles[3] = rightTile;
 
             return connectedTiles;
         }

@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: -818231221
   m_SortingLayer: 8
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5c346f44ced4bc543b46857eb8a8c2af, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fe3cb3a85c63fe74b834ea408d534546, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -139,7 +139,7 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 49926
+  m_InstanceId: 28850
 --- !u!114 &-914085290438490813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,6 +173,7 @@ MonoBehaviour:
   syncInterval: 0
   tileName: Wall
   currentHealth: 100
+  zRotation: 0
   layer: 1
 --- !u!114 &459575897210524334
 MonoBehaviour:
@@ -189,6 +190,6 @@ MonoBehaviour:
   standaloneSprite: {fileID: 21300000, guid: 5c346f44ced4bc543b46857eb8a8c2af, type: 3}
   cornerSprite: {fileID: 21300000, guid: fe3cb3a85c63fe74b834ea408d534546, type: 3}
   edgeSprite: {fileID: 21300000, guid: 58c49b5a69b92ab43a76907a97bf2f9a, type: 3}
-  straghtSprite: {fileID: 21300000, guid: b8f93fdd66b6e524bace4cea28203b0a, type: 3}
+  straightSprite: {fileID: 21300000, guid: b8f93fdd66b6e524bace4cea28203b0a, type: 3}
   centerSprite: {fileID: 21300000, guid: 6d9535dd3e246b1419b7c944de494782, type: 3}
   endSprite: {fileID: 21300000, guid: 562c56b4859caec4e9af63904cd2a650, type: 3}

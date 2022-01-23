@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+
 namespace Namestation.Grids
 {
     [Serializable]
@@ -10,6 +11,8 @@ namespace Namestation.Grids
     {
         [SyncVar] public string tileName;
         [SyncVar] public float currentHealth;
+        [SyncVar] public float zRotation;
+        [SyncVar] private string currentSpriteName;
         [SyncVar, HideInInspector, NonSerialized] public Transform currentParent;
         [SyncVar] public Layer layer;
 
@@ -18,17 +21,61 @@ namespace Namestation.Grids
             TryAssignValues();
         }
 
-        public void TryAssignValues() //Basically syncvar, but for gameobject parent, position and name
+        public void TryAssignValues() //As transform, ect. can not be networked directly, it is done via this function.
         {
-            if (currentParent != null && transform.parent == null)
+            if(transform.parent == null && currentParent != null)
             {
-                transform.parent = currentParent;
-                transform.localPosition = Vector2.zero;
-                gameObject.name = tileName;
-                Tile tile = currentParent.GetComponent<Tile>();
-                tile.tileObjects.Add(this);
-                tile.GetAdjacentTiles();
+                LoadTransform();
+                LoadGameObject();
+                LoadSprite();
+                AddToTile();
             }
+        }
+
+        private void LoadTransform()
+        {
+            transform.parent = currentParent;
+            transform.localPosition = Vector2.zero;
+            transform.localEulerAngles = Vector3.forward * zRotation;
+        }
+
+        private void LoadGameObject()
+        {
+            gameObject.name = tileName;
+        }
+
+        private void LoadSprite()
+        {
+            Sprite sprite = ResourceManager.GetSprite(currentSpriteName);
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.sprite = sprite;
+        }
+
+        private void AddToTile()
+        {
+            Tile tile = currentParent.GetComponent<Tile>();
+            tile.tileObjects.Add(this);
+        }
+
+        public void SetSpriteServer(string newSpriteName)
+        {
+            currentSpriteName = newSpriteName;
+            FinalizeSpriteChange(newSpriteName);
+            SetSpriteClient(newSpriteName);
+            //Make only server/only client call this?
+        }
+
+        [ClientRpc]
+        private void SetSpriteClient(string newSpriteName)
+        {
+            FinalizeSpriteChange(newSpriteName);
+        }
+
+        private void FinalizeSpriteChange(string newSpriteName)
+        {
+            Sprite newSprite = ResourceManager.GetSprite(newSpriteName);
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.sprite = newSprite;
         }
 
         public bool CanPlaceOn(Tile tile)

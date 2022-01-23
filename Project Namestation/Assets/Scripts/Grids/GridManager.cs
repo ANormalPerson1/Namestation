@@ -68,6 +68,11 @@ namespace Namestation.Grids
 
             newTileObject.currentParent = tile.transform;
             newTileObject.tileName = prefab.name;
+            newTileObject.zRotation = 0f;
+            Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
+            string spriteName = sprite.name;
+            newTileObject.SetSpriteServer(spriteName); //Only initial placement! Call different command to accomodate neighbours
+            //Call simpler function on load! IF EVEN, AS THE SPRITE IS STOREEEED!
             newTileObject.TryAssignValues();
             AddBuildingFeedbackClient(tile.transform.parent, newTileObject, tile.transform.localPosition);
         }
