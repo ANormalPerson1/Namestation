@@ -33,16 +33,22 @@ namespace Namestation.Grids
             return new SerializableTile(this);
         }
 
-        public bool ContainsPlacedName(string name)
+        public TileObject GetPlacedByName(string name)
         {
             foreach (TileObject tileObject in tileObjects)
             {
                 if (tileObject.name.Equals(name))
                 {
-                    return true;
+                    return tileObject;
                 }
             }
-            return false;
+
+            return null;
+        }
+
+        public bool ContainsPlacedName(string name)
+        {
+            return GetPlacedByName(name) != null;
         }
 
         public bool ContainsPlacedLayer(Layer layer)

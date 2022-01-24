@@ -3,6 +3,7 @@ using System.Collections;
 using Mirror;
 using Namestation.Saving;
 using Namestation.Player;
+using Namestation.Grids.Utilities;
 
 namespace Namestation.Grids
 {
@@ -61,24 +62,53 @@ namespace Namestation.Grids
             NetworkServer.Spawn(newTileGameObject);
             TileObject newTileObject = newTileGameObject.GetComponent<TileObject>();
 
+            AttemptToLoadTileObjectFromFile(newTileObject, jsonOverride);
+            SyncInitialAttributes(newTileObject, prefab.name, tile);
+            AttemptToTileSprite(newTileGameObject, jsonOverride);
+            PlayBuildingEffectClient(tile.transform.parent, newTileObject, tile.transform.localPosition);
+        }
+
+        private void AttemptToLoadTileObjectFromFile(TileObject newTileObject, string jsonOverride)
+        {
             if (jsonOverride != null)
             {
                 JsonUtility.FromJsonOverwrite(jsonOverride, newTileObject);
             }
+        }
 
-            newTileObject.currentParent = tile.transform;
-            newTileObject.tileName = prefab.name;
-            newTileObject.zRotation = 0f;
-            Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
+        private void SyncInitialAttributes(TileObject tileObject, string name, Tile tile)
+        {
+            tileObject.currentParent = tile.transform;
+            tileObject.tileName = name;
+            tileObject.zRotation = 0f;
+
+            Sprite sprite = tileObject.GetComponent<SpriteRenderer>().sprite;
             string spriteName = sprite.name;
-            newTileObject.SetSpriteServer(spriteName); //Only initial placement! Call different command to accomodate neighbours
-            //Call simpler function on load! IF EVEN, AS THE SPRITE IS STOREEEED!
-            newTileObject.TryAssignValues();
-            AddBuildingFeedbackClient(tile.transform.parent, newTileObject, tile.transform.localPosition);
+            tileObject.SetSpriteServer(spriteName);
+
+            //Called to further sync transform parent, ect.
+            tileObject.TryAssignValues();
+        }
+
+        private void AttemptToTileSprite(GameObject newTileGameObject, string jsonOverride)
+        {
+            bool isSpriteArleadyStored = jsonOverride != null;
+            bool shouldTileSprite = !isSpriteArleadyStored && newTileGameObject.GetComponent<TiledSpriteModule>();
+            if (shouldTileSprite)
+            {
+                TileSprite(newTileGameObject);
+            }
+
+        }
+
+        private void TileSprite(GameObject newTileGameObject)
+        {
+            TiledSpriteModule tiledSpriteModule = newTileGameObject.GetComponent<TiledSpriteModule>();
+            tiledSpriteModule.TileSpriteServer(true);
         }
 
         [ClientRpc]
-        private void AddBuildingFeedbackClient(Transform buildingGridTransform, TileObject tileObject, Vector3 localPosition)
+        private void PlayBuildingEffectClient(Transform buildingGridTransform, TileObject tileObject, Vector3 localPosition)
         {
             PlayBuildSoundClient(buildingGridTransform, localPosition);
             StartCoroutine(IE_PlayBuildAnimationClient(tileObject));

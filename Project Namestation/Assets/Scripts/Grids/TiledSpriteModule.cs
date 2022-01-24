@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 namespace Namestation.Grids.Utilities
 {
     [RequireComponent(typeof(TileObject))]
-    public class TiledSpriteModule : MonoBehaviour
+    public class TiledSpriteModule : NetworkBehaviour
     {
         public Sprite standaloneSprite;
         public Sprite cornerSprite;
@@ -17,101 +18,112 @@ namespace Namestation.Grids.Utilities
         // Start is called before the first frame update
         void Start()
         {
-     
 
-            
         }
 
-        void TileOwnSprite()
+        //TileSpriteServer should only be called on initial placement, not on start since load invokes that and only by the server!
+
+        public void TileSpriteServer(bool updateConnected)
         {
             Tile tile = GetComponentInParent<Tile>();
+            TileObject tileObject = GetComponent<TileObject>();
             Tile[] adjacentTiles = tile.GetAdjacentTiles(); //Top, left, bottom, right
-            bool hasTop = adjacentTiles[0] != null;
-            bool hasLeft = adjacentTiles[1] != null;
-            bool hasBottom = adjacentTiles[2] != null;
-            bool hasRight = adjacentTiles[3] != null;
+            bool hasTop = adjacentTiles[0].ContainsPlacedName(tileObject.name);
+            bool hasLeft = adjacentTiles[1].ContainsPlacedName(tileObject.name);
+            bool hasBottom = adjacentTiles[2].ContainsPlacedName(tileObject.name);
+            bool hasRight = adjacentTiles[3].ContainsPlacedName(tileObject.name);
+
+            if(updateConnected)
+            {
+                foreach(Tile adjacentTile in adjacentTiles)
+                {
+                    TileObject objectOfSameType = adjacentTile.GetPlacedByName(tileObject.name);
+                    if (objectOfSameType != null)
+                    {
+                        TiledSpriteModule connectedTiledSpriteModule = objectOfSameType.GetComponent<TiledSpriteModule>();
+                        connectedTiledSpriteModule.TileSpriteServer(false);
+                    }
+                }
+            }
 
             //Standalone sprite
-            if(!hasTop && !hasLeft && !hasBottom && !hasRight)
+            if (!hasTop && !hasLeft && !hasBottom && !hasRight)
             {
-                SetOwnSprite(standaloneSprite, 0f);
+                SetOwnSpriteServer(standaloneSprite, 0f);
             }
             //End sprites
             else if(hasTop && !hasLeft && !hasBottom && !hasRight)
             {
-                SetOwnSprite(endSprite, 180f);
+                SetOwnSpriteServer(endSprite, 180f);
             }
             else if (!hasTop && hasLeft && !hasBottom && !hasRight)
             {
-                SetOwnSprite(endSprite, 270f);
+                SetOwnSpriteServer(endSprite, 270f);
             }
             else if (!hasTop && !hasLeft && hasBottom && !hasRight)
             {
-                SetOwnSprite(endSprite, 0f);
+                SetOwnSpriteServer(endSprite, 0f);
             }
             else if (!hasTop && !hasLeft && !hasBottom && hasRight)
             {
-                SetOwnSprite(endSprite, 90f);
+                SetOwnSpriteServer(endSprite, 90f);
             }
             //Corner sprites
             else if(hasTop &&  hasLeft && !hasBottom && !hasRight)
             {
-                SetOwnSprite(cornerSprite, 180f);
+                SetOwnSpriteServer(cornerSprite, 180f);
             }
             else if(!hasTop && hasLeft && hasBottom && !hasRight)
             {
-                SetOwnSprite(cornerSprite, 270f);
+                SetOwnSpriteServer(cornerSprite, 270f);
             }
             else if(!hasTop && !hasLeft && hasBottom && hasRight)
             {
-                SetOwnSprite(cornerSprite, 0f);
+                SetOwnSpriteServer(cornerSprite, 0f);
             }
             else if(hasTop && !hasLeft && !hasBottom && hasRight)
             {
-                SetOwnSprite(cornerSprite, 90f);
+                SetOwnSpriteServer(cornerSprite, 90f);
             }
             //Straight sprites
             else if(hasTop && !hasLeft && hasBottom && !hasRight)
             {
-                SetOwnSprite(straightSprite, 0f);
+                SetOwnSpriteServer(straightSprite, 0f);
             }
             else if(!hasTop && hasLeft && !hasBottom && hasRight)
             {
-                SetOwnSprite(straightSprite, 90f);
+                SetOwnSpriteServer(straightSprite, 90f);
             }
             //3-section sprites
             else if(hasTop && hasLeft && hasBottom && !hasRight)
             {
-                SetOwnSprite(edgeSprite, 180f);
+                SetOwnSpriteServer(edgeSprite, 180f);
             }
             else if(!hasTop && hasLeft && hasBottom && hasRight)
             {
-                SetOwnSprite(edgeSprite, 270f);
+                SetOwnSpriteServer(edgeSprite, 270f);
             }
             else if(hasTop && !hasLeft && hasBottom && hasRight)
             {
-                SetOwnSprite(edgeSprite, 0f);
+                SetOwnSpriteServer(edgeSprite, 0f);
             }
             else if(hasTop && hasLeft && !hasBottom && hasRight)
             {
-                SetOwnSprite(edgeSprite, 90f);
+                SetOwnSpriteServer(edgeSprite, 90f);
             }
             //4-section sprite
             else if(hasTop && hasLeft && hasBottom && hasRight)
             {
-                SetOwnSprite(centerSprite, 0f);
+                SetOwnSpriteServer(centerSprite, 0f);
             }
         }
 
-        void SetOwnSprite(Sprite newSprite, float zRotation)
+        void SetOwnSpriteServer(Sprite newSprite, float zRotation)
         {
             TileObject tileObject = GetComponent<TileObject>();
+            tileObject.transform.localEulerAngles = Vector3.forward * zRotation;
+            tileObject.zRotation = zRotation;
             tileObject.SetSpriteServer(newSprite.name);
-        }
-
-        void TileConnectedSprites()
-        {
-
         }
     }
 
