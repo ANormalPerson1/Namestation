@@ -128,6 +128,8 @@ MonoBehaviour:
   syncInterval: 0
   tileName: Floor
   currentHealth: 100
+  zRotation: 0
+  currentSpriteName: 
   layer: 0
 --- !u!114 &146642509019186286
 MonoBehaviour:

@@ -11,12 +11,11 @@ GameObject:
   - component: {fileID: 4270895829921875584}
   - component: {fileID: 4270895829921875586}
   - component: {fileID: 9065099986314657861}
-  - component: {fileID: 4268903164798134638}
   - component: {fileID: -914085290438490813}
   - component: {fileID: 6610724641579617078}
   - component: {fileID: 459575897210524334}
   m_Layer: 8
-  m_Name: Wall
+  m_Name: Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: -818231221
   m_SortingLayer: 8
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5c346f44ced4bc543b46857eb8a8c2af, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 09002075c83ac1a42abbbc99ce3c32b6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -114,32 +113,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &4268903164798134638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4270895829921875585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShadowGroup: 0
-  m_HasRenderer: 1
-  m_UseRendererSilhouette: 0
-  m_CastsShadows: 1
-  m_SelfShadows: 0
-  m_ApplyToSortingLayers: 00000000473a8c3ced3434880dc438810faf40711d9349ab3de7f3d82dd3ab94
-  m_ShapePath:
-  - {x: -0.49999988, y: -0.5, z: 0}
-  - {x: -0.49999988, y: 0.5, z: 0}
-  - {x: 0.5, y: 0.5, z: 0}
-  - {x: 0.5, y: -0.5, z: 0}
-  m_ShapePathHash: 0
-  m_Mesh: {fileID: 0}
-  m_InstanceId: 61430
 --- !u!114 &-914085290438490813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,7 +128,7 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: 2444a5204e2edec4ab7a9d4f3ff737f7
+  m_AssetId: 67d49f61dff38c64faeb3206c29a33ac
   hasSpawned: 0
 --- !u!114 &6610724641579617078
 MonoBehaviour:
@@ -171,7 +144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
-  tileName: Wall
+  tileName: Window
   currentHealth: 100
   zRotation: 0
   currentSpriteName: 
@@ -190,9 +163,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  standaloneSprite: {fileID: 21300000, guid: 5c346f44ced4bc543b46857eb8a8c2af, type: 3}
-  cornerSprite: {fileID: 21300000, guid: fe3cb3a85c63fe74b834ea408d534546, type: 3}
-  edgeSprite: {fileID: 21300000, guid: 58c49b5a69b92ab43a76907a97bf2f9a, type: 3}
-  straightSprite: {fileID: 21300000, guid: b8f93fdd66b6e524bace4cea28203b0a, type: 3}
-  centerSprite: {fileID: 21300000, guid: 6d9535dd3e246b1419b7c944de494782, type: 3}
-  endSprite: {fileID: 21300000, guid: 562c56b4859caec4e9af63904cd2a650, type: 3}
+  standaloneSprite: {fileID: 21300000, guid: 09002075c83ac1a42abbbc99ce3c32b6, type: 3}
+  cornerSprite: {fileID: 21300000, guid: fcf6847fd12f1654f94a70cec6ed1437, type: 3}
+  edgeSprite: {fileID: 21300000, guid: 3073c81e9f7879d4ca85f5fd82ca87ef, type: 3}
+  straightSprite: {fileID: 21300000, guid: d69a3a99bef50904a9941267c7da2ee5, type: 3}
+  centerSprite: {fileID: 21300000, guid: 90aa0a3db0756a84ca94468257314098, type: 3}
+  endSprite: {fileID: 21300000, guid: e4d2626b4c983484db81a4742cf352b6, type: 3}
