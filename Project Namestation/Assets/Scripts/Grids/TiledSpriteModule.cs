@@ -28,20 +28,25 @@ namespace Namestation.Grids.Utilities
             Tile tile = GetComponentInParent<Tile>();
             TileObject tileObject = GetComponent<TileObject>();
             Tile[] adjacentTiles = tile.GetAdjacentTiles(); //Top, left, bottom, right
-            bool hasTop = adjacentTiles[0].ContainsPlacedName(tileObject.name);
-            bool hasLeft = adjacentTiles[1].ContainsPlacedName(tileObject.name);
-            bool hasBottom = adjacentTiles[2].ContainsPlacedName(tileObject.name);
-            bool hasRight = adjacentTiles[3].ContainsPlacedName(tileObject.name);
+
+            bool hasTop = CheckHasSameLayer(tileObject, adjacentTiles[0]);
+            bool hasLeft = CheckHasSameLayer(tileObject, adjacentTiles[1]);
+            bool hasBottom = CheckHasSameLayer(tileObject, adjacentTiles[2]);
+            bool hasRight = CheckHasSameLayer(tileObject, adjacentTiles[3]);
 
             if(updateConnected)
             {
                 foreach(Tile adjacentTile in adjacentTiles)
                 {
-                    TileObject objectOfSameType = adjacentTile.GetPlacedByName(tileObject.name);
-                    if (objectOfSameType != null)
+                    if(adjacentTile != null)
                     {
-                        TiledSpriteModule connectedTiledSpriteModule = objectOfSameType.GetComponent<TiledSpriteModule>();
-                        connectedTiledSpriteModule.TileSpriteServer(false);
+                        TileObject objectOfSameType = adjacentTile.GetPlacedByName(tileObject.name);
+                        if (objectOfSameType != null)
+                        {
+                            TiledSpriteModule connectedTiledSpriteModule = objectOfSameType.GetComponent<TiledSpriteModule>();
+                            connectedTiledSpriteModule.TileSpriteServer(false);
+                        }
+
                     }
                 }
             }
@@ -118,11 +123,15 @@ namespace Namestation.Grids.Utilities
             }
         }
 
-        void SetOwnSpriteServer(Sprite newSprite, float zRotation)
+        private bool CheckHasSameLayer(TileObject ownObject, Tile objectToCheck)
+        {
+            return objectToCheck != null && objectToCheck.ContainsPlacedName(ownObject.name);
+        }
+
+        private void SetOwnSpriteServer(Sprite newSprite, float zRotation)
         {
             TileObject tileObject = GetComponent<TileObject>();
-            tileObject.transform.localEulerAngles = Vector3.forward * zRotation;
-            tileObject.zRotation = zRotation;
+            tileObject.SetRotationServer(zRotation);
             tileObject.SetSpriteServer(newSprite.name);
         }
     }

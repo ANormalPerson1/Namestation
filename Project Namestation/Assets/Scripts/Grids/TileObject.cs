@@ -12,7 +12,7 @@ namespace Namestation.Grids
         [SyncVar] public string tileName;
         [SyncVar] public float currentHealth;
         [SyncVar] public float zRotation;
-        [SyncVar] private string currentSpriteName;
+        [SyncVar, HideInInspector, SerializeField] private string currentSpriteName;
         [SyncVar, HideInInspector, NonSerialized] public Transform currentParent;
         [SyncVar] public Layer layer;
 
@@ -57,6 +57,16 @@ namespace Namestation.Grids
             tile.tileObjects.Add(this);
         }
 
+        public bool HasStoredSprite()
+        {
+            return !currentSpriteName.Equals("");
+        }
+
+        public string GetStoredSprite()
+        {
+            return currentSpriteName;
+        }
+
         public void SetSpriteServer(string newSpriteName)
         {
             currentSpriteName = newSpriteName;
@@ -76,6 +86,19 @@ namespace Namestation.Grids
             Sprite newSprite = ResourceManager.GetSprite(newSpriteName);
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = newSprite;
+        }
+
+        public void SetRotationServer(float zRotation)
+        {
+            this.zRotation = zRotation;
+            transform.localEulerAngles = Vector3.forward * zRotation;
+            SetRotationClient(zRotation);
+        }
+
+        [ClientRpc]
+        private void SetRotationClient(float zRotation)
+        {
+            transform.localEulerAngles = Vector3.forward * zRotation;
         }
 
         public bool CanPlaceOn(Tile tile)

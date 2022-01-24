@@ -90,9 +90,6 @@ namespace Namestation.Grids
 
             LayerMask floorLayerMask = 1 << 7;
 
-            Collider2D[] candidates = Physics2D.OverlapBoxAll(checkPosition, Vector2.one * 0.1f, zRotation, floorLayerMask);
-            Debug.Log(candidates.Length);
-
             Collider2D candidateCollider = Physics2D.OverlapBox(checkPosition, Vector2.one * 0.1f, zRotation, floorLayerMask);
             if (candidateCollider != null)
             {

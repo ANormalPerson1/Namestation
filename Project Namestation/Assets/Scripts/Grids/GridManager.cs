@@ -80,14 +80,31 @@ namespace Namestation.Grids
         {
             tileObject.currentParent = tile.transform;
             tileObject.tileName = name;
-            tileObject.zRotation = 0f;
+            SyncInitialSprite(tileObject);
 
-            Sprite sprite = tileObject.GetComponent<SpriteRenderer>().sprite;
-            string spriteName = sprite.name;
-            tileObject.SetSpriteServer(spriteName);
 
             //Called to further sync transform parent, ect.
             tileObject.TryAssignValues();
+        }
+
+        private void SyncInitialSprite(TileObject tileObject)
+        {
+            SpriteRenderer spriteRenderer = tileObject.GetComponent<SpriteRenderer>();
+            string spriteName;
+
+            if (tileObject.HasStoredSprite())
+            {
+                spriteName = tileObject.GetStoredSprite();
+                Sprite sprite = ResourceManager.GetSprite(spriteName);
+                spriteRenderer.sprite = sprite;
+            }
+            else
+            {
+                Sprite sprite = spriteRenderer.sprite;
+                spriteName = sprite.name;
+            }
+
+            tileObject.SetSpriteServer(spriteName);
         }
 
         private void AttemptToTileSprite(GameObject newTileGameObject, string jsonOverride)
@@ -98,7 +115,6 @@ namespace Namestation.Grids
             {
                 TileSprite(newTileGameObject);
             }
-
         }
 
         private void TileSprite(GameObject newTileGameObject)
