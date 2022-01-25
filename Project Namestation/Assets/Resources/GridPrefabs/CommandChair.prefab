@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6964069213238402770
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 146642509019186286, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: sceneId
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 146642509019186286, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_AssetId
+      value: 09ad9d08dc40b6f499a1818298670dd3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875584, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875585, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_Name
+      value: CommandChair
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875585, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875586, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_Size.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875586, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_Size.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875586, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: a96994b99046d4548a15fd2d7ca3e724, type: 3}
+    - target: {fileID: 4270895829921875586, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_SortingLayer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270895829921875586, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1900064527
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803336036122414955, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803336036122414955, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3687015830650275217, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+--- !u!1 &6620323528417728595 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4270895829921875585, guid: 769bc30715ea21140b32ac2873a80525, type: 3}
+  m_PrefabInstance: {fileID: 6964069213238402770}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9827090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6620323528417728595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64cfe088723767c469554644e99c8f59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0
+  tileName: Toilet
+  currentHealth: 100
+  zRotation: 0
+  currentSpriteName: 
+  layer: 3
+  pissAmount: 11

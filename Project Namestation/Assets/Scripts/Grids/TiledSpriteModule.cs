@@ -15,14 +15,6 @@ namespace Namestation.Grids.Utilities
         public Sprite centerSprite;
         public Sprite endSprite;
 
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        //TileSpriteServer should only be called on initial placement, not on start since load invokes that and only by the server!
-
         public void TileSpriteServer(bool updateConnected)
         {
             Tile tile = GetComponentInParent<Tile>();
